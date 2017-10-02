@@ -64,6 +64,33 @@ func generateBitString(length int) (string, error) {
 	return bitstring, nil
 }
 
+func rouletteSelect(populace []Genome, weightSum float64) Genome {
+	var value float64 = rand.Float64() * weightSum
+
+	for _, x := range populace {
+		value -= float64(x.fitness())
+		if value <= 0 {
+			return x
+		}
+	}
+	return populace[len(populace)-1]
+}
+
+func roulette(populace []Genome, numParents int) []Genome {
+	breedingParents := make([]Genome, numParents)
+
+	var weightSum float64 = 0
+	for _, x := range populace {
+		weightSum += float64(x.fitness())
+	}
+
+	for i := 0; i < numParents; i++ {
+		breedingParents[i] = rouletteSelect(populace, weightSum)
+	}
+
+	return breedingParents
+}
+
 func main() {
 	rand.Seed(time.Now().Unix())
 
