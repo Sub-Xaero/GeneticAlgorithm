@@ -8,6 +8,12 @@ import (
 	"time"
 )
 
+var (
+	mutateChance = 100
+	numStrings   = 10
+	strLength    = 8
+)
+
 type Genome struct {
 	sequence string
 }
@@ -89,6 +95,19 @@ func roulette(populace []Genome, numParents int) []Genome {
 	}
 
 	return breedingParents
+}
+
+func fillRandomPopulation(populace []Genome) []Genome {
+	for len(populace) < numStrings {
+		str, err := generateBitString(strLength)
+		if err == nil {
+			populace = append(populace, Genome{str})
+		} else {
+			panic(errors.New("failed to initialise population"))
+		}
+	}
+	fmt.Println("Initial population:", populace)
+	return populace
 }
 
 func main() {
