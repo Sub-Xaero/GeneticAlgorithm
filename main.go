@@ -113,4 +113,35 @@ func fillRandomPopulation(populace []Genome) []Genome {
 func main() {
 	rand.Seed(time.Now().Unix())
 
+	// Init
+	population := make([]Genome, 0)
+	population = fillRandomPopulation(population)
+
+	for y := 0; y < 100; y++ {
+		fmt.Println("Interation", y)
+		fmt.Println("Start Population:", population)
+
+		breedingGround := make([]Genome, 0)
+		breedingGround = append(breedingGround, roulette(population, numStrings/2)...)
+
+		fmt.Println("Roulette:", breedingGround)
+
+		crossoverBreedingGround := make([]Genome, 0)
+		for i := 0; i+1 < len(breedingGround); i += 2 {
+			crossoverBreedingGround = append(crossoverBreedingGround, breedingGround[i].crossover(breedingGround[i+1])...)
+		}
+		breedingGround = crossoverBreedingGround
+		fmt.Println("Crossover:", breedingGround)
+
+		for _, i := range breedingGround {
+			i.mutate(mutateChance)
+		}
+		fmt.Println("Mutation:", breedingGround)
+
+		population = make([]Genome, 0)
+		copy(population, breedingGround)
+		population = fillRandomPopulation(population)
+		fmt.Println("Fill Population:", population)
+		fmt.Println()
+	}
 }
