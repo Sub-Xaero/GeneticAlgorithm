@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 	"strconv"
 	"time"
@@ -33,6 +34,23 @@ func (self Genome) crossover(spouse Genome) []Genome {
 	offspring = append(offspring, Genome{self.sequence[0:crossover] + spouse.sequence[crossover:]})
 	offspring = append(offspring, Genome{spouse.sequence[0:crossover] + self.sequence[crossover:]})
 	return offspring
+}
+
+func (self *Genome) mutate(chance int) Genome {
+	mutant := ""
+	for _, i := range self.sequence {
+		if rand.Int()%chance == 1 {
+			if string(i) == "1" {
+				mutant += "0"
+			} else {
+				mutant += "1"
+			}
+		} else {
+			mutant += string(i)
+		}
+	}
+	self.sequence = mutant
+	return *self
 }
 
 func generateBitString(length int) (string, error) {
