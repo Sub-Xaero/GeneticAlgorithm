@@ -86,17 +86,16 @@ func Tournament(population []Genome) []Genome {
 	return offspring
 }
 
-func fillRandomPopulation(populace []Genome) []Genome {
-	for len(populace) < numStrings {
-		str, err := generateBitString(strLength)
+func FillRandomPopulation(population []Genome) []Genome {
+	for len(population) < numStrings {
+		str, err := GenerateBitString(strLength)
 		if err == nil {
-			populace = append(populace, Genome{str})
+			population = append(population, Genome{str})
 		} else {
 			panic(errors.New("failed to initialise population"))
 		}
 	}
-	fmt.Println("Initial population:", populace)
-	return populace
+	return population
 }
 
 func main() {
@@ -104,7 +103,7 @@ func main() {
 
 	// Init
 	population := make([]Genome, 0)
-	population = fillRandomPopulation(population)
+	population = FillRandomPopulation(population)
 
 	for y := 0; y < 100; y++ {
 		fmt.Println("Interation", y)
@@ -128,8 +127,7 @@ func main() {
 
 		population = make([]Genome, 0)
 		copy(population, breedingGround)
-		population = fillRandomPopulation(population)
-		fmt.Println("Fill Population:", population)
+		fmt.Println()
 		fmt.Println()
 	}
 }
