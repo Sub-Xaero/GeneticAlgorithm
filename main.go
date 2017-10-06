@@ -68,31 +68,22 @@ func GenerateBitString(length int) (string, error) {
 	return bitstring, nil
 }
 
-func rouletteSelect(populace []Genome, weightSum float64) Genome {
-	var value float64 = rand.Float64() * weightSum
+// Tournament returns a [] Genome population composed of the best out of randomly selected pairs
+func Tournament(population []Genome) []Genome {
+	offspring := make([]Genome, 0)
 
-	for _, x := range populace {
-		value -= float64(x.fitness())
-		if value <= 0 {
-			return x
+	for i := 0; i < len(population); i++ {
+		parent1 := population[rand.Int()%len(population)]
+		parent2 := population[rand.Int()%len(population)]
+
+		if parent1.Fitness() > parent2.Fitness() {
+			offspring = append(offspring, parent1)
+		} else {
+			offspring = append(offspring, parent2)
 		}
 	}
-	return populace[len(populace)-1]
-}
 
-func roulette(populace []Genome, numParents int) []Genome {
-	breedingParents := make([]Genome, numParents)
-
-	var weightSum float64 = 0
-	for _, x := range populace {
-		weightSum += float64(x.fitness())
-	}
-
-	for i := 0; i < numParents; i++ {
-		breedingParents[i] = rouletteSelect(populace, weightSum)
-	}
-
-	return breedingParents
+	return offspring
 }
 
 func fillRandomPopulation(populace []Genome) []Genome {
@@ -120,9 +111,8 @@ func main() {
 		fmt.Println("Start Population:", population)
 
 		breedingGround := make([]Genome, 0)
-		breedingGround = append(breedingGround, roulette(population, numStrings/2)...)
-
-		fmt.Println("Roulette:", breedingGround)
+		breedingGround = append(breedingGround, Tournament(population)...)
+		fmt.Println("Tournament Offspring  :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround))
 
 		crossoverBreedingGround := make([]Genome, 0)
 		for i := 0; i+1 < len(breedingGround); i += 2 {
