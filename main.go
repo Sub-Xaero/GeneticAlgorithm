@@ -32,10 +32,10 @@ func (gene Genome) Crossover(spouse Genome) []Genome {
 		panic(errors.New("strings are not current length"))
 	}
 
-	crossover := rand.Int() % len(self.sequence)
+	crossover := rand.Int() % len(gene.sequence)
 
-	offspring = append(offspring, Genome{self.sequence[0:crossover] + spouse.sequence[crossover:]})
-	offspring = append(offspring, Genome{spouse.sequence[0:crossover] + self.sequence[crossover:]})
+	offspring = append(offspring, Genome{gene.sequence[0:crossover] + spouse.sequence[crossover:]})
+	offspring = append(offspring, Genome{spouse.sequence[0:crossover] + gene.sequence[crossover:]})
 	return offspring
 }
 
