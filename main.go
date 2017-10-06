@@ -68,7 +68,7 @@ func (gene Genome) String() string {
 	}
 }
 
-// ByFitness is a reciever type that implements Sort for Genome []
+// ByFitness is a receiver type that implements Sort for Genome []
 type ByFitness []Genome
 
 func (a ByFitness) Len() int           { return len(a) }
