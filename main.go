@@ -14,6 +14,7 @@ var (
 	strLength    = 8
 )
 
+// Genome represents a bitstring and associated fitness value
 type Genome struct {
 	sequence string
 }
