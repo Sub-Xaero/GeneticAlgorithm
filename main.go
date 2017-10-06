@@ -24,10 +24,11 @@ func (gene Genome) Fitness() int {
 	return strings.Count(gene.sequence, "1")
 }
 
-func (self Genome) crossover(spouse Genome) []Genome {
+// Crossover returns bitstring pair which is product of two bitstrings with their tails swapped at a random index
+func (gene Genome) Crossover(spouse Genome) []Genome {
 	offspring := make([]Genome, 0)
 
-	if len(self.sequence) != len(spouse.sequence) {
+	if len(gene.sequence) != len(spouse.sequence) {
 		panic(errors.New("strings are not current length"))
 	}
 
