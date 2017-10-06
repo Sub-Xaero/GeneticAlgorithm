@@ -58,6 +58,17 @@ func (self *Genome) mutate(chance int) Genome {
 	return *self
 }
 
+// MaxFitness returns the highest fitness found in a [] Genome population
+func MaxFitness(population []Genome) int {
+	var max int = 0
+	for _, i := range population {
+		if i.Fitness() > max {
+			max = i.Fitness()
+		}
+	}
+	return max
+}
+
 // GenerateBitString returns the highest fitness found in a [] Genome population
 func GenerateBitString(length int) (string, error) {
 	if length <= 0 {
