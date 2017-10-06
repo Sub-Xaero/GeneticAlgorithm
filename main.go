@@ -19,14 +19,9 @@ type Genome struct {
 	sequence string
 }
 
-func (self Genome) fitness() int64 {
-	var score int64
-	score, err := strconv.ParseInt(self.sequence, 2, 32)
-	if err == nil {
-		return score
-	} else {
-		panic(errors.New("could not parse bitstring"))
-	}
+// Fitness calculates the suitability of a candidate solution and returns an integral score value
+func (gene Genome) Fitness() int {
+	return strings.Count(gene.sequence, "1")
 }
 
 func (self Genome) crossover(spouse Genome) []Genome {
