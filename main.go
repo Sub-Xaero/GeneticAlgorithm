@@ -41,10 +41,11 @@ func (gene Genome) Crossover(spouse Genome) []Genome {
 	return offspring
 }
 
-func (self *Genome) mutate(chance int) Genome {
+// Mutate returns a bitstring with bits flipped at chance 1/n
+func (gene Genome) Mutate(n int) Genome {
 	mutant := ""
-	for _, i := range self.sequence {
-		if rand.Int()%chance == 1 {
+	for _, i := range gene.sequence {
+		if rand.Int()%n == 1 {
 			if string(i) == "1" {
 				mutant += "0"
 			} else {
@@ -54,8 +55,8 @@ func (self *Genome) mutate(chance int) Genome {
 			mutant += string(i)
 		}
 	}
-	self.sequence = mutant
-	return *self
+	gene.sequence = mutant
+	return gene
 }
 
 // AverageFitness returns the average fitness of a [] Genome population
@@ -143,8 +144,8 @@ func main() {
 		breedingGround = crossoverBreedingGround
 		fmt.Println("Crossover:", breedingGround)
 
-		for _, i := range breedingGround {
-			i.mutate(mutateChance)
+		for index := range breedingGround {
+			breedingGround[index] = breedingGround[index].Mutate(mutateChance)
 		}
 		fmt.Println("Mutation:", breedingGround)
 
