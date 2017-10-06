@@ -9,9 +9,11 @@ import (
 )
 
 var (
-	mutateChance = 100
-	numStrings   = 10
-	strLength    = 8
+	globalChance = 10
+	mutateChance = globalChance
+	numStrings   = globalChance
+	strLength    = globalChance
+	generations  = globalChance
 )
 
 // Genome represents a bitstring and associated fitness value
@@ -105,9 +107,10 @@ func main() {
 	population := make([]Genome, 0)
 	population = FillRandomPopulation(population)
 
-	for y := 0; y < 100; y++ {
-		fmt.Println("Interation", y)
 		fmt.Println("Start Population:", population)
+	// Run breeding cycles
+	for y := 1; y <= generations; y++ {
+		fmt.Println("Iteration", y)
 
 		breedingGround := make([]Genome, 0)
 		breedingGround = append(breedingGround, Tournament(population)...)
@@ -125,7 +128,7 @@ func main() {
 		}
 		fmt.Println("Mutation:", breedingGround)
 
-		population = make([]Genome, 0)
+		population = make([]Genome, numStrings)
 		copy(population, breedingGround)
 		fmt.Println()
 		fmt.Println()
