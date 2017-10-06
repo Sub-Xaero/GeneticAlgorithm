@@ -59,7 +59,8 @@ func (self *Genome) mutate(chance int) Genome {
 	return *self
 }
 
-func generateBitString(length int) (string, error) {
+// GenerateBitString returns the highest fitness found in a [] Genome population
+func GenerateBitString(length int) (string, error) {
 	if length <= 0 {
 		return "", errors.New("strings cannot be zero-length")
 	}
