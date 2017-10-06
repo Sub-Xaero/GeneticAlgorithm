@@ -58,6 +58,15 @@ func (self *Genome) mutate(chance int) Genome {
 	return *self
 }
 
+// AverageFitness returns the average fitness of a [] Genome population
+func AverageFitness(population []Genome) int {
+	var average int = 0
+	for _, i := range population {
+		average += i.Fitness()
+	}
+	return average / int(len(population))
+}
+
 // MaxFitness returns the highest fitness found in a [] Genome population
 func MaxFitness(population []Genome) int {
 	var max int = 0
