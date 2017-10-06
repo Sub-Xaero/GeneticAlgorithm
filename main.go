@@ -59,6 +59,13 @@ func (gene Genome) Mutate(n int) Genome {
 	return gene
 }
 
+func (gene Genome) String() string {
+	if len(gene.sequence) <= 10 {
+		return fmt.Sprintf("{%v, %3v}", gene.sequence, gene.Fitness())
+	} else {
+		return fmt.Sprintf("%v", gene.Fitness())
+	}
+}
 
 // ByFitness is a reciever type that implements Sort for Genome []
 type ByFitness []Genome
