@@ -96,15 +96,15 @@ func MaxFitness(population []Genome) int {
 }
 
 // GenerateBitString returns the highest fitness found in a [] Genome population
-func GenerateBitString(length int) (string, error) {
+func GenerateBitString(length int) string {
 	if length <= 0 {
-		return "", errors.New("strings cannot be zero-length")
+		panic(errors.New("strings cannot be zero-length"))
 	}
 	var bitstring string
 	for i := 0; i < length; i++ {
 		bitstring += strconv.Itoa(rand.Int() % 2)
 	}
-	return bitstring, nil
+	return bitstring
 }
 
 // Tournament returns a [] Genome population composed of the best out of randomly selected pairs
@@ -127,12 +127,7 @@ func Tournament(population []Genome) []Genome {
 
 func FillRandomPopulation(population []Genome) []Genome {
 	for len(population) < numStrings {
-		str, err := GenerateBitString(strLength)
-		if err == nil {
-			population = append(population, Genome{str})
-		} else {
-			panic(errors.New("failed to initialise population"))
-		}
+		population = append(population, Genome{GenerateBitString(strLength)})
 	}
 	return population
 }
