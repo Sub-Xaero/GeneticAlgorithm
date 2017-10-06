@@ -154,7 +154,7 @@ func main() {
 
 		crossoverBreedingGround := make([]Genome, 0)
 		for i := 0; i+1 < len(breedingGround); i += 2 {
-			crossoverBreedingGround = append(crossoverBreedingGround, breedingGround[i].crossover(breedingGround[i+1])...)
+			crossoverBreedingGround = append(crossoverBreedingGround, breedingGround[i].Crossover(breedingGround[i+1])...)
 		}
 		breedingGround = crossoverBreedingGround
 		fmt.Println("Crossover:", breedingGround)
