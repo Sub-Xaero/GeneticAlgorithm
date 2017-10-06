@@ -144,10 +144,10 @@ func main() {
 	population := make([]Genome, 0)
 	population = FillRandomPopulation(population)
 
-		fmt.Println("Start Population:", population)
 	// Run breeding cycles
 	for y := 1; y <= generations; y++ {
 		fmt.Println("Iteration", y)
+		fmt.Println("Start Population      :", population, "Average:", AverageFitness(population), "Max:", MaxFitness(population))
 
 		breedingGround := make([]Genome, 0)
 		breedingGround = append(breedingGround, Tournament(population)...)
@@ -158,12 +158,12 @@ func main() {
 			crossoverBreedingGround = append(crossoverBreedingGround, breedingGround[i].Crossover(breedingGround[i+1])...)
 		}
 		breedingGround = crossoverBreedingGround
-		fmt.Println("Crossover:", breedingGround)
+		fmt.Println("Crossover Offspring   :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround))
 
 		for index := range breedingGround {
 			breedingGround[index] = breedingGround[index].Mutate(mutateChance)
 		}
-		fmt.Println("Mutation:", breedingGround)
+		fmt.Println("Mutation Offspring    :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround))
 
 		population = make([]Genome, numStrings)
 		copy(population, breedingGround)
