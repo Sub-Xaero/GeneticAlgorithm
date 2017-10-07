@@ -44,7 +44,7 @@ func TestSort(t *testing.T) {
 
 }
 
-func TestGenerateBitString(t *testing.T) {
+func TestDefaultGenerateBitString(t *testing.T) {
 	bitstring := GenerateBitString(10)
 
 	if len(bitstring) != 10 {
@@ -53,6 +53,26 @@ func TestGenerateBitString(t *testing.T) {
 	_, err := strconv.ParseInt(bitstring, 2, 0)
 	if err != nil {
 		t.Error("String is not correct length")
+	}
+}
+
+func TestCustomGenerateBitString(t *testing.T) {
+	SetGenerateBitString(func(length int) string {
+		var bitstring = ""
+		for i := 1; i <= length; i++ {
+			bitstring += strconv.Itoa(i)
+		}
+		return bitstring
+	})
+	bitstring := GenerateBitString(9)
+
+	if len(bitstring) != 9 {
+		t.Error("String is not correct length", bitstring)
+	}
+
+	expected := "123456789"
+	if bitstring != expected {
+		t.Error("String is not correct string:", bitstring, "Expected:", expected)
 	}
 }
 
