@@ -9,22 +9,24 @@ import (
 	"strings"
 )
 
-var fitnessFunc func(gene Genome) int
-
 func check(e error) {
 	if e != nil {
 		panic(e)
 	}
 }
 
-// SetFitnessFunc changes the fitness function to the function specified
-func SetFitnessFunc(f func(gene Genome) int) {
-	fitnessFunc = f
-}
-
 // Genome represents a bitstring and associated fitness value
 type Genome struct {
 	Sequence string
+}
+
+var fitnessFunc func(gene Genome) int = func(gene Genome) int {
+	return strings.Count(gene.Sequence, "1")
+}
+
+// SetFitnessFunc changes the fitness function to the function specified
+func SetFitnessFunc(f func(gene Genome) int) {
+	fitnessFunc = f
 }
 
 // Fitness calculates the suitability of a candidate solution and returns an integral score value
