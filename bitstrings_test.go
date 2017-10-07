@@ -2,6 +2,7 @@ package ga
 
 import (
 	"sort"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -43,3 +44,44 @@ func TestSort(t *testing.T) {
 
 }
 
+func TestGenerateBitString(t *testing.T) {
+	bitstring := GenerateBitString(10)
+
+	if len(bitstring) != 10 {
+		t.Error("String is not correct length")
+	}
+	_, err := strconv.ParseInt(bitstring, 2, 0)
+	if err != nil {
+		t.Error("String is not correct length")
+	}
+}
+
+func TestGenome_ToString(t *testing.T) {
+	SetFitnessFunc(func(gene Genome) int {
+		return strings.Count(gene.Sequence, "1")
+	})
+
+	outputString := Genome{"1111"}.String()
+	expected := "{1111,   4}"
+	if outputString != expected {
+		t.Error("Incorrect string:", outputString, "Expected:", expected)
+	}
+
+	outputString = Genome{"1010101010"}.String()
+	expected = "{1010101010,   5}"
+	if outputString != expected {
+		t.Error("Incorrect string:", outputString, "Expected:", expected)
+	}
+
+	outputString = Genome{"1111111111"}.String()
+	expected = "{1111111111,  10}"
+	if outputString != expected {
+		t.Error("Incorrect string:", outputString, "Expected:", expected)
+	}
+
+	outputString = Genome{"111111111111"}.String()
+	expected = "12"
+	if outputString != expected {
+		t.Error("Incorrect string:", outputString, "Expected:", expected)
+	}
+}
