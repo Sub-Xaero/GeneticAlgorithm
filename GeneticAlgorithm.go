@@ -73,13 +73,6 @@ func (gene Genome) String() string {
 	}
 }
 
-// ByFitness is a receiver type that implements Sort for Genome []
-type ByFitness []Genome
-
-func (a ByFitness) Len() int           { return len(a) }
-func (a ByFitness) Swap(x, y int)      { a[x], a[y] = a[y], a[x] }
-func (a ByFitness) Less(x, y int) bool { return a[x].Fitness() < a[y].Fitness() }
-
 // AverageFitness returns the average fitness of a [] Genome population
 func AverageFitness(population []Genome) int {
 	var average int = 0
