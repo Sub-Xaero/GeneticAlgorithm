@@ -44,3 +44,34 @@ func TestAverageFitness(t *testing.T) {
 	}
 }
 
+func TestMaxFitness(t *testing.T) {
+	SetFitnessFunc(func(gene Genome) int {
+		return strings.Count(gene.Sequence, "1")
+	})
+
+	population := []Genome{
+		{"11111111"},
+		{"11110000"},
+		{"00000000"},
+		{"00000000"},
+	}
+
+	if MaxFitness(population) != 8 {
+		t.Error("Incorrect max fitness")
+	}
+
+	SetFitnessFunc(func(gene Genome) int {
+		return strings.Count(gene.Sequence, "0")
+	})
+
+	population = []Genome{
+		{"11111111"},
+		{"11110000"},
+		{"00000000"},
+		{"00000000"},
+	}
+
+	if MaxFitness(population) != 8 {
+		t.Error("Incorrect max fitness")
+	}
+}
