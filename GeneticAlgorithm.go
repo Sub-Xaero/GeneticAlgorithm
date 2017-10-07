@@ -1,51 +1,56 @@
-package main
+package ga
 
 import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
-var (
-	globalChance = 10
-	mutateChance = globalChance
-	numStrings   = globalChance
-	strLength    = globalChance
-	generations  = globalChance
-)
+var fitnessFunc func(gene Genome) int
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+// SetFitnessFunc changes the fitness function to the function specified
+func SetFitnessFunc(f func(gene Genome) int) {
+	fitnessFunc = f
+}
 
 // Genome represents a bitstring and associated fitness value
 type Genome struct {
-	sequence string
+	Sequence string
 }
 
 // Fitness calculates the suitability of a candidate solution and returns an integral score value
 func (gene Genome) Fitness() int {
-	return strings.Count(gene.sequence, "1")
+	return fitnessFunc(gene)
 }
 
 // Crossover returns bitstring pair which is product of two bitstrings with their tails swapped at a random index
 func (gene Genome) Crossover(spouse Genome) []Genome {
 	offspring := make([]Genome, 0)
 
-	if len(gene.sequence) != len(spouse.sequence) {
+	if len(gene.Sequence) != len(spouse.Sequence) {
 		panic(errors.New("strings are not current length"))
 	}
 
-	crossover := rand.Int() % len(gene.sequence)
+	crossover := rand.Int() % len(gene.Sequence)
 
-	offspring = append(offspring, Genome{gene.sequence[0:crossover] + spouse.sequence[crossover:]})
-	offspring = append(offspring, Genome{spouse.sequence[0:crossover] + gene.sequence[crossover:]})
+	offspring = append(offspring, Genome{gene.Sequence[0:crossover] + spouse.Sequence[crossover:]})
+	offspring = append(offspring, Genome{spouse.Sequence[0:crossover] + gene.Sequence[crossover:]})
 	return offspring
 }
 
 // Mutate returns a bitstring with bits flipped at chance 1/n
 func (gene Genome) Mutate(n int) Genome {
 	mutant := ""
-	for _, i := range gene.sequence {
+	for _, i := range gene.Sequence {
 		if rand.Int()%n == 1 {
 			if string(i) == "1" {
 				mutant += "0"
@@ -56,13 +61,13 @@ func (gene Genome) Mutate(n int) Genome {
 			mutant += string(i)
 		}
 	}
-	gene.sequence = mutant
+	gene.Sequence = mutant
 	return gene
 }
 
 func (gene Genome) String() string {
-	if len(gene.sequence) <= 10 {
-		return fmt.Sprintf("{%v, %3v}", gene.sequence, gene.Fitness())
+	if len(gene.Sequence) <= 10 {
+		return fmt.Sprintf("{%v, %3v}", gene.Sequence, gene.Fitness())
 	} else {
 		return fmt.Sprintf("%v", gene.Fitness())
 	}
@@ -125,19 +130,55 @@ func Tournament(population []Genome) []Genome {
 	return offspring
 }
 
-func FillRandomPopulation(population []Genome) []Genome {
-	for len(population) < numStrings {
-		population = append(population, Genome{GenerateBitString(strLength)})
+func FillRandomPopulation(population []Genome, populationSize, bitstringLength int) []Genome {
+	for len(population) < populationSize {
+		population = append(population, Genome{GenerateBitString(bitstringLength)})
 	}
 	return population
 }
 
-func main() {
-	rand.Seed(time.Now().Unix())
+// GetOutputFilenameGenerator closure that returns a func that increments a counter and returns filename and NotExist error
+func GetOutputFilenameGenerator() func() (string, error) {
+	filename := "output"
+	filenum := 0
+	extension := ".txt"
+	return func() (string, error) {
+		filenum++
+		fullFileName := strings.Join([]string{filename, strconv.Itoa(filenum), extension}, "")
+		_, err := os.Stat(fullFileName)
+		return fullFileName, err
+	}
+}
+
+// GetUnusedOutputFile returns the filename of a numbered output file that doesn't yet exist
+func GetUnusedOutputFile() string {
+	generateFilename := GetOutputFilenameGenerator()
+
+	fullFileName, err := generateFilename()
+	for !os.IsNotExist(err) {
+		fullFileName, err = generateFilename()
+	}
+	return fullFileName
+}
+
+func GeneticAlgorithm(populationSize, bitstringLength, generations, mutateChance int) []Genome {
+	// Open output file, to save results to
+	outputFile := "output.txt"
+	_, err := os.Stat(outputFile)
+	if !os.IsNotExist(err) {
+		os.Remove(outputFile)
+	}
+	f, err := os.OpenFile(outputFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, os.ModePerm)
+	check(err)
+	defer f.Close()
+	defer f.Sync()
+
+	outputString := strings.Join([]string{"Iteration", "AverageFitness", "MaxFitness", "\n"}, ",")
+	f.WriteString(outputString)
 
 	// Init
 	population := make([]Genome, 0)
-	population = FillRandomPopulation(population)
+	population = FillRandomPopulation(population, populationSize, bitstringLength)
 
 	// Run breeding cycles
 	for y := 1; y <= generations; y++ {
@@ -160,9 +201,14 @@ func main() {
 		}
 		fmt.Println("Mutation Offspring    :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround))
 
-		population = make([]Genome, numStrings)
+		population = make([]Genome, populationSize)
 		copy(population, breedingGround)
 		fmt.Println()
 		fmt.Println()
+
+		outputString := strings.Join([]string{strconv.Itoa(y), strconv.Itoa(AverageFitness(population)), strconv.Itoa(MaxFitness(population)), "\n"}, ",")
+		f.WriteString(outputString)
 	}
+
+	return population
 }
