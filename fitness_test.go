@@ -27,3 +27,20 @@ func TestGenome_Fitness(t *testing.T) {
 	}
 }
 
+func TestAverageFitness(t *testing.T) {
+	SetFitnessFunc(func(gene Genome) int {
+		return strings.Count(gene.Sequence, "1")
+	})
+
+	population := []Genome{
+		{"1111"},
+		{"1111"},
+		{"0000"},
+		{"0000"},
+	}
+
+	if AverageFitness(population) != 2 {
+		t.Error("Incorrect average fitness")
+	}
+}
+
