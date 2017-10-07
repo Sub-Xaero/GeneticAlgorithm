@@ -108,7 +108,7 @@ var GenerateBitString func(int) string = func(length int) string {
 }
 
 // SetGenerateBitString sets the function that generates the bitstring population
-func SetGenerateBitString(f func(int) string) {
+func SetGenerateBitString(f func(length int) string) {
 	GenerateBitString = f
 }
 
