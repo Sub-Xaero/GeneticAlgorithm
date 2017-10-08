@@ -72,7 +72,11 @@ func (gene Genome) Mutate(chance int) Genome {
 }
 
 func (gene Genome) String() string {
-	return fmt.Sprintf("{%v, %3v}", gene.Sequence, gene.Fitness())
+	if len(gene.Sequence) <= 10 {
+		return fmt.Sprintf("{%v, %3v}", gene.Sequence, gene.Fitness())
+	} else {
+		return fmt.Sprintf("%v", gene.Fitness())
+	}
 }
 
 // Tournament returns a [] Genome population composed of the best out of randomly selected pairs
