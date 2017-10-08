@@ -20,8 +20,7 @@ type Genome struct {
 	Sequence string
 }
 
-// Crossover returns bitstring pair which is product of two bitstrings with their tails swapped at a random index
-func (gene Genome) Crossover(spouse Genome) []Genome {
+var crossoverFunc func(gene, spouse Genome) []Genome = func(gene, spouse Genome) []Genome {
 	offspring := make([]Genome, 0)
 
 	if len(gene.Sequence) != len(spouse.Sequence) {
@@ -35,11 +34,20 @@ func (gene Genome) Crossover(spouse Genome) []Genome {
 	return offspring
 }
 
-// Mutate returns a bitstring with bits flipped at chance 1/n
-func (gene Genome) Mutate(n int) Genome {
+// SetCrossoverFunc changes the crossover function to the function specified
+func SetCrossoverFunc(f func(gene, spouse Genome) []Genome) {
+	crossoverFunc = f
+}
+
+// Crossover applies a function, set by SetCrossoverFunc to the receiver gene and a specified pair
+func (gene Genome) Crossover(spouse Genome) []Genome {
+	return crossoverFunc(gene, spouse)
+}
+
+var mutateFunc func(gene Genome, chance int) Genome = func(gene Genome, chance int) Genome {
 	mutant := ""
 	for _, i := range gene.Sequence {
-		if rand.Int()%n == 1 {
+		if rand.Int()%chance == 1 {
 			if string(i) == "1" {
 				mutant += "0"
 			} else {
@@ -53,12 +61,18 @@ func (gene Genome) Mutate(n int) Genome {
 	return gene
 }
 
+// SetMutateFunc changes the mutate function to the function specified
+func SetMutateFunc(f func(gene Genome, chance int) Genome) {
+	mutateFunc = f
+}
+
+// Mutate returns a bitstring with bits mutated by a function set by SetMutateFunc
+func (gene Genome) Mutate(chance int) Genome {
+	return mutateFunc(gene, chance)
+}
+
 func (gene Genome) String() string {
-	if len(gene.Sequence) <= 10 {
-		return fmt.Sprintf("{%v, %3v}", gene.Sequence, gene.Fitness())
-	} else {
-		return fmt.Sprintf("%v", gene.Fitness())
-	}
+	return fmt.Sprintf("{%v, %3v}", gene.Sequence, gene.Fitness())
 }
 
 // Tournament returns a [] Genome population composed of the best out of randomly selected pairs
