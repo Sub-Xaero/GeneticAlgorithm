@@ -12,14 +12,23 @@ func AverageFitness(population []Genome) int {
 }
 
 // MaxFitness returns the highest fitness found in a [] Genome population
-func MaxFitness(population []Genome) int {
-	var max int = 0
+func MaxFitnessCandidate(population []Genome) Genome {
+	var (
+		max     int = 0
+		maxGene Genome
+	)
 	for _, i := range population {
 		if i.Fitness() > max {
 			max = i.Fitness()
+			maxGene = i
 		}
 	}
-	return max
+	return maxGene
+}
+
+// MaxFitness returns the highest fitness found in a [] Genome population
+func MaxFitness(population []Genome) int {
+	return MaxFitnessCandidate(population).Fitness()
 }
 
 var fitnessFunc func(gene Genome) int = func(gene Genome) int {

@@ -122,27 +122,49 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations, mutateChance
 	// Init
 	population := make([]Genome, 0)
 	population = FillRandomPopulation(population, populationSize, bitstringLength)
+	bestCandidate := population[0]
 
 	// Run breeding cycles
 	for y := 1; y <= generations; y++ {
-		fmt.Println("Iteration", y)
-		fmt.Println("Start Population      :", population, "Average:", AverageFitness(population), "Max:", MaxFitness(population))
+		var bestCandidateOfGeneration Genome
 
+		bestCandidateOfGeneration = MaxFitnessCandidate(population)
+		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
+			bestCandidate = bestCandidateOfGeneration
+		}
+		fmt.Println("Iteration", y)
+		fmt.Println("Start Population      :", population, "Average:", AverageFitness(population), "Max:", MaxFitness(population), "Best:", bestCandidateOfGeneration.Sequence)
+
+		// Tournament
 		breedingGround := make([]Genome, 0)
 		breedingGround = append(breedingGround, Tournament(population)...)
-		fmt.Println("Tournament Offspring  :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround))
+		bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
+		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
+			bestCandidate = bestCandidateOfGeneration
+		}
+		fmt.Println("Tournament Offspring  :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 
+		// Crossover
 		crossoverBreedingGround := make([]Genome, 0)
 		for i := 0; i+1 < len(breedingGround); i += 2 {
 			crossoverBreedingGround = append(crossoverBreedingGround, breedingGround[i].Crossover(breedingGround[i+1])...)
 		}
 		breedingGround = crossoverBreedingGround
-		fmt.Println("Crossover Offspring   :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround))
+		bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
+		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
+			bestCandidate = bestCandidateOfGeneration
+		}
+		fmt.Println("Crossover Offspring   :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 
+		// Mutation
 		for index := range breedingGround {
 			breedingGround[index] = breedingGround[index].Mutate(mutateChance)
 		}
-		fmt.Println("Mutation Offspring    :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround))
+		bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
+		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
+			bestCandidate = bestCandidateOfGeneration
+		}
+		fmt.Println("Mutation Offspring    :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 
 		population = make([]Genome, populationSize)
 		copy(population, breedingGround)
@@ -153,5 +175,6 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations, mutateChance
 		f.WriteString(outputString)
 	}
 
+	fmt.Println("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
 	return population
 }
