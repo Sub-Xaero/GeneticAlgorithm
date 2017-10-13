@@ -1,7 +1,6 @@
 package ga
 
 import (
-	"errors"
 	"fmt"
 	"math/rand"
 	"os"
@@ -18,26 +17,6 @@ func check(e error) {
 // Genome represents a bitstring and associated fitness value
 type Genome struct {
 	Sequence []int
-}
-
-var mutateFunc func(gene Genome) Genome = func(gene Genome) Genome {
-	choice := rand.Int() % len(gene.Sequence)
-	if gene.Sequence[choice] == 1 {
-		gene.Sequence[choice] = 0
-	} else {
-		gene.Sequence[choice] = 1
-	}
-	return gene
-}
-
-// SetMutateFunc changes the mutate function to the function specified
-func SetMutateFunc(f func(gene Genome) Genome) {
-	mutateFunc = f
-}
-
-// Mutate returns a bitstring with bits mutated by a function set by SetMutateFunc
-func (gene Genome) Mutate() Genome {
-	return mutateFunc(gene)
 }
 
 func (gene Genome) String() string {
