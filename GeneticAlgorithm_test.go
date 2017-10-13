@@ -2,9 +2,21 @@ package ga
 
 import (
 	"testing"
+	"fmt"
+	"math/rand"
 )
 
+func TestGeneticAlgorithm(t *testing.T) {
+	rand.Seed(3)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetMutateFunc(DefaultMutateFunc)
+	fmt.Println(GeneticAlgorithm(10, 10, 50, true, true, false))
+}
+
 func TestFillRandomPopulation(t *testing.T) {
+	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetMutateFunc(DefaultMutateFunc)
+
 	population := make([]Genome, 0)
 	population = FillRandomPopulation(population, 10, 10)
 
@@ -34,5 +46,3 @@ func TestTournament(t *testing.T) {
 		t.Error("Fitness decreased after tournament")
 	}
 }
-
-
