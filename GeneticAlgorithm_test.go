@@ -5,6 +5,23 @@ import (
 	"testing"
 )
 
+
+func TestTournament(t *testing.T) {
+	population := []Genome{
+		{[]int{1, 1, 1, 1}},
+		{[]int{0, 1, 1, 1}},
+		{[]int{0, 0, 1, 1}},
+		{[]int{0, 0, 0, 1}},
+	}
+	avgFitnessBefore := AverageFitness(population)
+	population = Tournament(population)
+	avgFitnessAfter := AverageFitness(population)
+
+	if avgFitnessAfter < avgFitnessBefore {
+		t.Error("Fitness decreased after tournament")
+	}
+}
+
 func TestCrossover(t *testing.T) {
 	population := []Genome{
 		{[]int{1, 0, 0, 0}},
