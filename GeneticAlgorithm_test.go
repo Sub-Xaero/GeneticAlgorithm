@@ -1,7 +1,6 @@
 package ga
 
 import (
-	"fmt"
 	"testing"
 )
 
