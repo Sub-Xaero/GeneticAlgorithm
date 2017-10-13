@@ -3,23 +3,21 @@ package ga
 import (
 	"errors"
 	"math/rand"
-	"strconv"
 )
 
-
 // GenerateBitString returns an encoded string as set by calls SetGenerateBitString. Defaults to binary strings
-var GenerateBitString func(int) string = func(length int) string {
+var GenerateCandidate func(int) []int = func(length int) []int {
 	if length <= 0 {
 		panic(errors.New("strings cannot be zero-length"))
 	}
-	var bitstring string
+	var sequence []int
 	for i := 0; i < length; i++ {
-		bitstring += strconv.Itoa(rand.Int() % 2)
+		sequence = append(sequence, rand.Int()%2)
 	}
-	return bitstring
+	return sequence
 }
 
 // SetGenerateBitString sets the function that generates the bitstring population
-func SetGenerateBitString(f func(length int) string) {
-	GenerateBitString = f
+func SetGenerateCandidate(f func(length int) []int) {
+	GenerateCandidate = f
 }

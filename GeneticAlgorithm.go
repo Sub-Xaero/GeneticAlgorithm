@@ -17,11 +17,10 @@ func check(e error) {
 
 // Genome represents a bitstring and associated fitness value
 type Genome struct {
-	Sequence string
+	Sequence []int
 }
 
 var crossoverFunc func(gene, spouse Genome) []Genome = func(gene, spouse Genome) []Genome {
-	offspring := make([]Genome, 0)
 
 	if len(gene.Sequence) != len(spouse.Sequence) {
 		panic(errors.New("strings are not current length"))
@@ -29,9 +28,10 @@ var crossoverFunc func(gene, spouse Genome) []Genome = func(gene, spouse Genome)
 
 	crossover := rand.Int() % len(gene.Sequence)
 
-	offspring = append(offspring, Genome{gene.Sequence[0:crossover] + spouse.Sequence[crossover:]})
-	offspring = append(offspring, Genome{spouse.Sequence[0:crossover] + gene.Sequence[crossover:]})
-	return offspring
+	return []Genome{
+		{append(append(make([]int, 0), gene.Sequence[:crossover]...), spouse.Sequence[crossover:]...)},
+		{append(append(make([]int, 0), spouse.Sequence[:crossover]...), gene.Sequence[crossover:]...)},
+	}
 }
 
 // SetCrossoverFunc changes the crossover function to the function specified
@@ -44,31 +44,24 @@ func (gene Genome) Crossover(spouse Genome) []Genome {
 	return crossoverFunc(gene, spouse)
 }
 
-var mutateFunc func(gene Genome, chance int) Genome = func(gene Genome, chance int) Genome {
-	mutant := ""
-	for _, i := range gene.Sequence {
-		if rand.Int()%chance == 1 {
-			if string(i) == "1" {
-				mutant += "0"
-			} else {
-				mutant += "1"
-			}
-		} else {
-			mutant += string(i)
-		}
+var mutateFunc func(gene Genome) Genome = func(gene Genome) Genome {
+	choice := rand.Int() % len(gene.Sequence)
+	if gene.Sequence[choice] == 1 {
+		gene.Sequence[choice] = 0
+	} else {
+		gene.Sequence[choice] = 1
 	}
-	gene.Sequence = mutant
 	return gene
 }
 
 // SetMutateFunc changes the mutate function to the function specified
-func SetMutateFunc(f func(gene Genome, chance int) Genome) {
+func SetMutateFunc(f func(gene Genome) Genome) {
 	mutateFunc = f
 }
 
 // Mutate returns a bitstring with bits mutated by a function set by SetMutateFunc
-func (gene Genome) Mutate(chance int) Genome {
-	return mutateFunc(gene, chance)
+func (gene Genome) Mutate() Genome {
+	return mutateFunc(gene)
 }
 
 func (gene Genome) String() string {
@@ -97,14 +90,14 @@ func Tournament(population []Genome) []Genome {
 	return offspring
 }
 
-func FillRandomPopulation(population []Genome, populationSize, bitstringLength int) []Genome {
+func FillRandomPopulation(population []Genome, populationSize, candidateLength int) []Genome {
 	for len(population) < populationSize {
-		population = append(population, Genome{GenerateBitString(bitstringLength)})
+		population = append(population, Genome{GenerateCandidate(candidateLength)})
 	}
 	return population
 }
 
-func GeneticAlgorithm(populationSize, bitstringLength, generations, mutateChance int) []Genome {
+func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossover, mutate, terminateEarly bool) []Genome {
 	// Open output file, to save results to
 	outputFile := "output.txt"
 	_, err := os.Stat(outputFile)
@@ -119,6 +112,8 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations, mutateChance
 	outputString := strings.Join([]string{"Iteration", "AverageFitness", "MaxFitness", "\n"}, ",")
 	f.WriteString(outputString)
 
+	iterationsSinceChange := 0
+
 	// Init
 	population := make([]Genome, 0)
 	population = FillRandomPopulation(population, populationSize, bitstringLength)
@@ -131,6 +126,7 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations, mutateChance
 		bestCandidateOfGeneration = MaxFitnessCandidate(population)
 		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
 			bestCandidate = bestCandidateOfGeneration
+			iterationsSinceChange = 0
 		}
 		fmt.Println("Iteration", y)
 		fmt.Println("Start Population      :", population, "Average:", AverageFitness(population), "Max:", MaxFitness(population), "Best:", bestCandidateOfGeneration.Sequence)
@@ -141,38 +137,53 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations, mutateChance
 		bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
 		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
 			bestCandidate = bestCandidateOfGeneration
+			iterationsSinceChange = 0
 		}
 		fmt.Println("Tournament Offspring  :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 
 		// Crossover
-		crossoverBreedingGround := make([]Genome, 0)
-		for i := 0; i+1 < len(breedingGround); i += 2 {
-			crossoverBreedingGround = append(crossoverBreedingGround, breedingGround[i].Crossover(breedingGround[i+1])...)
+		if crossover {
+			crossoverBreedingGround := make([]Genome, 0)
+			for i := 0; i+1 < len(breedingGround); i += 2 {
+				crossoverBreedingGround = append(crossoverBreedingGround, breedingGround[i].Crossover(breedingGround[i+1])...)
+			}
+			breedingGround = crossoverBreedingGround
+			bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
+			if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
+				bestCandidate = bestCandidateOfGeneration
+				iterationsSinceChange = 0
+			}
+			fmt.Println("Crossover Offspring   :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		}
-		breedingGround = crossoverBreedingGround
-		bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
-		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
-			bestCandidate = bestCandidateOfGeneration
-		}
-		fmt.Println("Crossover Offspring   :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 
 		// Mutation
-		for index := range breedingGround {
-			breedingGround[index] = breedingGround[index].Mutate(mutateChance)
+		if mutate {
+			for index := range breedingGround {
+				breedingGround[index] = breedingGround[index].Mutate()
+			}
+			bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
+			if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
+				bestCandidate = bestCandidateOfGeneration
+				iterationsSinceChange = 0
+			}
+			fmt.Println("Mutation Offspring    :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		}
-		bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
-		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
-			bestCandidate = bestCandidateOfGeneration
-		}
-		fmt.Println("Mutation Offspring    :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 
+		iterationsSinceChange++
 		population = make([]Genome, populationSize)
 		copy(population, breedingGround)
+		fmt.Println("Final Population      :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		fmt.Println()
 		fmt.Println()
 
 		outputString := strings.Join([]string{strconv.Itoa(y), strconv.Itoa(AverageFitness(population)), strconv.Itoa(MaxFitness(population)), "\n"}, ",")
 		f.WriteString(outputString)
+
+		if terminateEarly && float32(iterationsSinceChange) > float32(generations)*0.25 {
+			fmt.Println("Termination : Stagnating change")
+			fmt.Println("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
+			return population
+		}
 	}
 
 	fmt.Println("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())

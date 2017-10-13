@@ -1,7 +1,5 @@
 package ga
 
-import "strings"
-
 // AverageFitness returns the average fitness of a [] Genome population
 func AverageFitness(population []Genome) int {
 	var average int = 0
@@ -32,7 +30,13 @@ func MaxFitness(population []Genome) int {
 }
 
 var fitnessFunc func(gene Genome) int = func(gene Genome) int {
-	return strings.Count(gene.Sequence, "1")
+	count := 0
+	for _, i := range gene.Sequence {
+		if i == 1 {
+			count++
+		}
+	}
+	return count
 }
 
 // SetFitnessFunc changes the fitness function to the function specified

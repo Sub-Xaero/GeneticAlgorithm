@@ -1,33 +1,38 @@
 package ga
 
 import (
+	"fmt"
 	"sort"
-	"strconv"
-	"strings"
 	"testing"
 )
 
 func TestSort(t *testing.T) {
 	SetFitnessFunc(func(gene Genome) int {
-		return strings.Count(gene.Sequence, "1")
+		count := 0
+		for _, i := range gene.Sequence {
+			if i == 1 {
+				count++
+			}
+		}
+		return count
 	})
 
 	population := []Genome{
-		{"111111"},
-		{"011111"},
-		{"001111"},
-		{"000111"},
-		{"000011"},
-		{"000001"},
+		{[]int{1, 1, 1, 1, 1, 1}},
+		{[]int{0, 1, 1, 1, 1, 1}},
+		{[]int{0, 0, 1, 1, 1, 1}},
+		{[]int{0, 0, 0, 1, 1, 1}},
+		{[]int{0, 0, 0, 0, 1, 1}},
+		{[]int{0, 0, 0, 0, 0, 1}},
 	}
 
 	after := []Genome{
-		{"111111"},
-		{"011111"},
-		{"001111"},
-		{"000111"},
-		{"000011"},
-		{"000001"},
+		{[]int{1, 1, 1, 1, 1, 1}},
+		{[]int{0, 1, 1, 1, 1, 1}},
+		{[]int{0, 0, 1, 1, 1, 1}},
+		{[]int{0, 0, 0, 1, 1, 1}},
+		{[]int{0, 0, 0, 0, 1, 1}},
+		{[]int{0, 0, 0, 0, 0, 1}},
 	}
 	sort.Sort(ByFitness(population))
 
@@ -36,7 +41,9 @@ func TestSort(t *testing.T) {
 	}
 
 	for i := range population {
-		if population[i] != after[len(after)-i-1] {
+		left := fmt.Sprint(population[i])
+		right := fmt.Sprint(after[len(after)-i-1])
+		if left != right {
 			t.Error("Not sorted")
 			break
 		}
@@ -44,62 +51,71 @@ func TestSort(t *testing.T) {
 
 }
 
-func TestDefaultGenerateBitString(t *testing.T) {
-	bitstring := GenerateBitString(10)
+func TestDefaultGenerateCandidate(t *testing.T) {
+	bitstring := GenerateCandidate(10)
 
 	if len(bitstring) != 10 {
 		t.Error("String is not correct length")
 	}
-	_, err := strconv.ParseInt(bitstring, 2, 0)
-	if err != nil {
-		t.Error("String is not correct length")
+	sum := 0
+	for _, i := range bitstring {
+		sum += i
+	}
+	if sum >= 20 {
+		t.Error("String is not correct value")
 	}
 }
 
-func TestCustomGenerateBitString(t *testing.T) {
-	SetGenerateBitString(func(length int) string {
-		var bitstring = ""
+func TestCustomGenerateCandidate(t *testing.T) {
+	SetGenerateCandidate(func(length int) []int {
+		var sequence []int
 		for i := 1; i <= length; i++ {
-			bitstring += strconv.Itoa(i)
+			sequence = append(sequence, i)
 		}
-		return bitstring
+		return sequence
 	})
-	bitstring := GenerateBitString(9)
+	bitstring := GenerateCandidate(9)
 
 	if len(bitstring) != 9 {
 		t.Error("String is not correct length", bitstring)
 	}
 
-	expected := "123456789"
-	if bitstring != expected {
+	expected := "[1 2 3 4 5 6 7 8 9]"
+	if fmt.Sprint(bitstring) != expected {
 		t.Error("String is not correct string:", bitstring, "Expected:", expected)
 	}
 }
 
 func TestGenome_ToString(t *testing.T) {
 	SetFitnessFunc(func(gene Genome) int {
-		return strings.Count(gene.Sequence, "1")
+		count := 0
+		for _, i := range gene.Sequence {
+			if i == 1 {
+				count++
+			}
+		}
+		return count
 	})
 
-	outputString := Genome{"1111"}.String()
-	expected := "{1111,   4}"
+	outputString := Genome{[]int{1, 1, 1, 1}}.String()
+	expected := "{[1 1 1 1],   4}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
 
-	outputString = Genome{"1010101010"}.String()
-	expected = "{1010101010,   5}"
+	outputString = Genome{[]int{1, 0, 1, 0, 1, 0, 1, 0, 1, 0}}.String()
+	expected = "{[1 0 1 0 1 0 1 0 1 0],   5}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
 
-	outputString = Genome{"1111111111"}.String()
-	expected = "{1111111111,  10}"
+	outputString = Genome{[]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}}.String()
+	expected = "{[1 1 1 1 1 1 1 1 1 1],  10}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
 
-	outputString = Genome{"111111111111"}.String()
+	outputString = Genome{[]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}}.String()
 	expected = "12"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
