@@ -1,3 +1,4 @@
 .idea/
 *.exe
 coverage.out
+output.txt
