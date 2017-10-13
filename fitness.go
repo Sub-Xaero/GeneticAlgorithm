@@ -29,7 +29,7 @@ func MaxFitness(population []Genome) int {
 	return MaxFitnessCandidate(population).Fitness()
 }
 
-var fitnessFunc func(gene Genome) int = func(gene Genome) int {
+var DefaultFitnessFunc func(gene Genome) int = func(gene Genome) int {
 	count := 0
 	for _, i := range gene.Sequence {
 		if i == 1 {
@@ -38,6 +38,7 @@ var fitnessFunc func(gene Genome) int = func(gene Genome) int {
 	}
 	return count
 }
+var fitnessFunc = DefaultFitnessFunc
 
 // SetFitnessFunc changes the fitness function to the function specified
 func SetFitnessFunc(f func(gene Genome) int) {
