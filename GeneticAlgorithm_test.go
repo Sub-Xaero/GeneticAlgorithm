@@ -53,3 +53,14 @@ func TestCrossover(t *testing.T) {
 		t.Error("Crossover failed")
 	}
 }
+
+func TestSetCrossoverFunc(t *testing.T) {
+	SetCrossoverFunc(func(gene, spouse Genome) []Genome {
+		return []Genome{{[]int{1, 2, 3, 4}}}
+	})
+
+	if fmt.Sprint(Genome{[]int{}}.Crossover(Genome{[]int{}})) != "[{[1 2 3 4],   1}]" {
+		t.Error("Crossover function not set")
+	}
+}
+
