@@ -7,21 +7,28 @@ import (
 	"time"
 )
 
-func TestGeneticAlgorithmTerminateEarly10(t *testing.T) {
+const (
+	ROULETTE   = iota
+	TOURNAMENT = iota
+)
+
+func testGA(length, generations, expectedFitness, selectionMethod int, terminateEarly bool, t *testing.T) {
 	rand.Seed(3)
 
+	switch selectionMethod {
+	case TOURNAMENT:
+		SetSelectionFunc(TournamentSelection)
+	case ROULETTE:
+		SetSelectionFunc(RouletteSelection)
+	}
 	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
-	globalVar := 10
-	multiplier := 10
-	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*multiplier, true, true, true)
+	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
 	fmt.Println(bestCandidate, finalPopulation)
 
-	expectedFitness := 8
 	gotFitness := bestCandidate.Fitness()
 	if gotFitness < expectedFitness {
 		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
@@ -29,238 +36,34 @@ func TestGeneticAlgorithmTerminateEarly10(t *testing.T) {
 		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
 	}
 
-	if numIterations < globalVar*multiplier {
-		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
-	} else {
-		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
+	if terminateEarly && numIterations < generations {
+		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", generations, "iterations, GA took", numIterations)
+	} else if terminateEarly {
+		t.Error("GA did not terminate early. Expected less than", generations, "iterations, GA took", numIterations)
 	}
 }
 
-func TestGeneticAlgorithmTerminateEarly20(t *testing.T) {
-	rand.Seed(3)
+func TestGA_Tournament_TerminateEarly_10(t *testing.T) { testGA(10, 100, 8, TOURNAMENT, true, t) }
+func TestGA_Tournament_TerminateEarly_20(t *testing.T) { testGA(20, 200, 15, TOURNAMENT, true, t) }
+func TestGA_Tournament_TerminateEarly_30(t *testing.T) { testGA(30, 300, 25, TOURNAMENT, true, t) }
+func TestGA_Tournament_TerminateEarly_40(t *testing.T) { testGA(40, 400, 35, TOURNAMENT, true, t) }
+func TestGA_Tournament_TerminateEarly_50(t *testing.T) { testGA(50, 500, 45, TOURNAMENT, true, t) }
+func TestGA_Tournament_Full_10(t *testing.T)           { testGA(10, 100, 8, TOURNAMENT, false, t) }
+func TestGA_Tournament_Full_20(t *testing.T)           { testGA(20, 200, 15, TOURNAMENT, false, t) }
+func TestGA_Tournament_Full_30(t *testing.T)           { testGA(30, 300, 25, TOURNAMENT, false, t) }
+func TestGA_Tournament_Full_40(t *testing.T)           { testGA(40, 400, 35, TOURNAMENT, false, t) }
+func TestGA_Tournament_Full_50(t *testing.T)           { testGA(50, 500, 45, TOURNAMENT, false, t) }
 
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	globalVar := 20
-	multiplier := 10
-	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*multiplier, true, true, true)
-	fmt.Println(bestCandidate, finalPopulation)
-
-	expectedFitness := 18
-	gotFitness := bestCandidate.Fitness()
-	if gotFitness < expectedFitness {
-		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	} else {
-		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	}
-
-	if numIterations < globalVar*multiplier {
-		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
-	} else {
-		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
-	}
-}
-
-func TestGeneticAlgorithmTerminateEarly30(t *testing.T) {
-	rand.Seed(3)
-
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	globalVar := 30
-	multiplier := 10
-	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*10, true, true, true)
-	fmt.Println(bestCandidate, finalPopulation)
-
-	expectedFitness := 28
-	gotFitness := bestCandidate.Fitness()
-	if gotFitness < expectedFitness {
-		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	} else {
-		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	}
-
-	if numIterations < globalVar*multiplier {
-		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
-	} else {
-		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
-	}
-}
-
-func TestGeneticAlgorithmTerminateEarly40(t *testing.T) {
-	rand.Seed(3)
-
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	globalVar := 40
-	multiplier := 10
-	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*multiplier, true, true, true)
-	fmt.Println(bestCandidate, finalPopulation)
-
-	expectedFitness := 38
-	gotFitness := bestCandidate.Fitness()
-	if gotFitness < expectedFitness {
-		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	} else {
-		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	}
-
-	if numIterations < globalVar*multiplier {
-		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
-	} else {
-		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
-	}
-}
-
-func TestGeneticAlgorithmTerminateEarly50(t *testing.T) {
-	rand.Seed(3)
-
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	globalVar := 50
-	multiplier := 10
-	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*multiplier, true, true, true)
-	fmt.Println(bestCandidate, finalPopulation)
-
-	expectedFitness := 48
-	gotFitness := bestCandidate.Fitness()
-	if gotFitness < expectedFitness {
-		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	} else {
-		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	}
-
-	if numIterations < globalVar*multiplier {
-		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
-	} else {
-		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
-	}
-}
-
-func TestGeneticAlgorithmFull10(t *testing.T) {
-	rand.Seed(3)
-
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	globalVar := 10
-	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
-	fmt.Println(bestCandidate, finalPopulation)
-
-	expectedFitness := 8
-	gotFitness := bestCandidate.Fitness()
-	if gotFitness < expectedFitness {
-		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	} else {
-		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	}
-}
-
-func TestGeneticAlgorithmFull20(t *testing.T) {
-	rand.Seed(3)
-
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	globalVar := 20
-	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
-	fmt.Println(bestCandidate, finalPopulation)
-
-	expectedFitness := 18
-	gotFitness := bestCandidate.Fitness()
-	if gotFitness < expectedFitness {
-		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	} else {
-		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	}
-}
-
-func TestGeneticAlgorithmFull30(t *testing.T) {
-	rand.Seed(3)
-
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	globalVar := 30
-	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
-	fmt.Println(bestCandidate, finalPopulation)
-
-	expectedFitness := 28
-	gotFitness := bestCandidate.Fitness()
-	if gotFitness < expectedFitness {
-		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	} else {
-		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	}
-}
-
-func TestGeneticAlgorithmFull40(t *testing.T) {
-	rand.Seed(3)
-
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	globalVar := 40
-	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
-	fmt.Println(bestCandidate, finalPopulation)
-
-	expectedFitness := 38
-	gotFitness := bestCandidate.Fitness()
-	if gotFitness < expectedFitness {
-		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	} else {
-		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	}
-}
-
-func TestGeneticAlgorithmFull50(t *testing.T) {
-	rand.Seed(3)
-
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	globalVar := 50
-	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
-	fmt.Println(bestCandidate, finalPopulation)
-
-	expectedFitness := 48
-	gotFitness := bestCandidate.Fitness()
-	if gotFitness < expectedFitness {
-		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	} else {
-		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
-	}
-}
+func TestGA_Roulette_TerminateEarly_10(t *testing.T) { testGA(10, 100, 8, ROULETTE, true, t) }
+func TestGA_Roulette_TerminateEarly_20(t *testing.T) { testGA(20, 200, 15, ROULETTE, true, t) }
+func TestGA_Roulette_TerminateEarly_30(t *testing.T) { testGA(30, 300, 25, ROULETTE, true, t) }
+func TestGA_Roulette_TerminateEarly_40(t *testing.T) { testGA(40, 400, 35, ROULETTE, true, t) }
+func TestGA_Roulette_TerminateEarly_50(t *testing.T) { testGA(50, 500, 45, ROULETTE, true, t) }
+func TestGA_Roulette_Full_10(t *testing.T)           { testGA(10, 100, 8, ROULETTE, false, t) }
+func TestGA_Roulette_Full_20(t *testing.T)           { testGA(20, 200, 15, ROULETTE, false, t) }
+func TestGA_Roulette_Full_30(t *testing.T)           { testGA(30, 300, 25, ROULETTE, false, t) }
+func TestGA_Roulette_Full_40(t *testing.T)           { testGA(40, 400, 35, ROULETTE, false, t) }
+func TestGA_Roulette_Full_50(t *testing.T)           { testGA(50, 500, 45, ROULETTE, false, t) }
 
 func TestFillRandomPopulation(t *testing.T) {
 	rand.Seed(time.Now().Unix())
