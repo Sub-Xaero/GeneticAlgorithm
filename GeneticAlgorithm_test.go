@@ -17,7 +17,8 @@ func TestGeneticAlgorithmTerminateEarly10(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 10
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*10, true, true, true)
+	multiplier := 10
+	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*multiplier, true, true, true)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 8
@@ -26,6 +27,12 @@ func TestGeneticAlgorithmTerminateEarly10(t *testing.T) {
 		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
 	} else {
 		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
+	}
+
+	if numIterations < globalVar*multiplier {
+		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
+	} else {
+		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
 	}
 }
 
@@ -39,7 +46,8 @@ func TestGeneticAlgorithmTerminateEarly20(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 20
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*10, true, true, true)
+	multiplier := 10
+	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*multiplier, true, true, true)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 18
@@ -48,6 +56,12 @@ func TestGeneticAlgorithmTerminateEarly20(t *testing.T) {
 		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
 	} else {
 		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
+	}
+
+	if numIterations < globalVar*multiplier {
+		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
+	} else {
+		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
 	}
 }
 
@@ -61,7 +75,8 @@ func TestGeneticAlgorithmTerminateEarly30(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 30
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*10, true, true, true)
+	multiplier := 10
+	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*10, true, true, true)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 28
@@ -70,6 +85,12 @@ func TestGeneticAlgorithmTerminateEarly30(t *testing.T) {
 		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
 	} else {
 		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
+	}
+
+	if numIterations < globalVar*multiplier {
+		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
+	} else {
+		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
 	}
 }
 
@@ -83,7 +104,8 @@ func TestGeneticAlgorithmTerminateEarly40(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 40
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*10, true, true, true)
+	multiplier := 10
+	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*multiplier, true, true, true)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 38
@@ -92,6 +114,12 @@ func TestGeneticAlgorithmTerminateEarly40(t *testing.T) {
 		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
 	} else {
 		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
+	}
+
+	if numIterations < globalVar*multiplier {
+		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
+	} else {
+		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
 	}
 }
 
@@ -105,7 +133,8 @@ func TestGeneticAlgorithmTerminateEarly50(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 50
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*10, true, true, true)
+	multiplier := 10
+	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar*multiplier, true, true, true)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 48
@@ -114,6 +143,12 @@ func TestGeneticAlgorithmTerminateEarly50(t *testing.T) {
 		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
 	} else {
 		t.Log("GA produced a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
+	}
+
+	if numIterations < globalVar*multiplier {
+		t.Log("GA successfully detected stagnation. Terminated early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
+	} else {
+		t.Error("GA did not terminate early. Expected less than", globalVar*multiplier, "iterations, GA took", numIterations)
 	}
 }
 
@@ -127,7 +162,7 @@ func TestGeneticAlgorithmFull10(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 10
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
+	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 8
@@ -149,7 +184,7 @@ func TestGeneticAlgorithmFull20(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 20
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
+	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 18
@@ -171,7 +206,7 @@ func TestGeneticAlgorithmFull30(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 30
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
+	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 28
@@ -193,7 +228,7 @@ func TestGeneticAlgorithmFull40(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 40
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
+	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 38
@@ -215,7 +250,7 @@ func TestGeneticAlgorithmFull50(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	globalVar := 50
-	bestCandidate, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
+	bestCandidate, _, finalPopulation := GeneticAlgorithm(globalVar, globalVar, globalVar, true, true, false)
 	fmt.Println(bestCandidate, finalPopulation)
 
 	expectedFitness := 48

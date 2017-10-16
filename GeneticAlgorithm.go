@@ -42,7 +42,7 @@ func FillRandomPopulation(population []Genome, populationSize, candidateLength i
 	return population
 }
 
-func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossover, mutate, terminateEarly bool) (Genome, []Genome) {
+func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossover, mutate, terminateEarly bool) (bestCandidate Genome, numGenerations int, population []Genome) {
 	// Open output file, to save results to
 	outputFile := "output.txt"
 	_, err := os.Stat(outputFile)
@@ -59,10 +59,10 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 	iterationsSinceChange := 0
 
 	// Init
-	population := make([]Genome, 0)
+	population = make([]Genome, 0)
 	population = FillRandomPopulation(population, populationSize, bitstringLength)
 
-	bestCandidate := population[0]
+	bestCandidate = population[0]
 
 	UpdateBestCandidate := func(bestOverall *Genome, bestGeneration Genome, iterationsSinceChange *int) {
 		if bestGeneration.Fitness() > bestOverall.Fitness() {
@@ -114,6 +114,7 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 			fmt.Println("Mutation Offspring    :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		}
 
+		numGenerations++
 		iterationsSinceChange++
 		population = make([]Genome, populationSize)
 		copy(population, breedingGround)
@@ -127,10 +128,10 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 		if terminateEarly && float32(iterationsSinceChange) > float32(generations)*0.25 {
 			fmt.Println("Termination : Stagnating change")
 			fmt.Println("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
-			return bestCandidate, population
+			return bestCandidate, numGenerations, population
 		}
 	}
 
 	fmt.Println("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
-	return bestCandidate, population
+	return bestCandidate, numGenerations, population
 }
