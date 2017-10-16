@@ -14,14 +14,20 @@ func TestCrossover(t *testing.T) {
 	}
 	offspring := population[0].Crossover(population[1])
 	found := false
-	for _, val := range offspring {
-		if fmt.Sprint(val) == "{[1 0 0 1],   2}" {
+	foundIndex := 0
+
+	expectedString := "{[1 0 0 1],   2}"
+	for i, val := range offspring {
+		if fmt.Sprint(val) == expectedString {
 			found = true
+			foundIndex = i
 			break
 		}
 	}
 	if !found {
-		t.Error("Crossover failed", offspring)
+		t.Error("Crossover failed.", "Expected:", expectedString, "Got:", offspring)
+	} else {
+		t.Log("Crossover succeeded.", "Expected:", expectedString, "Got:", offspring[foundIndex])
 	}
 }
 
@@ -30,7 +36,11 @@ func TestSetCrossoverFunc(t *testing.T) {
 		return []Genome{{[]int{1, 2, 3, 4}}}
 	})
 
-	if fmt.Sprint(Genome{[]int{}}.Crossover(Genome{[]int{}})) != "[{[1 2 3 4],   1}]" {
-		t.Error("Crossover function not set")
+	expectedString := "[{[1 2 3 4],   1}]"
+	gotString := fmt.Sprint(Genome{[]int{}}.Crossover(Genome{[]int{}}))
+	if gotString != expectedString {
+		t.Error("Crossover function not set.", "Expected:", expectedString, "Got:", gotString)
+	} else {
+		t.Log("Crossover function set successfully.", "Expected:", expectedString, "Got:", gotString)
 	}
 }
