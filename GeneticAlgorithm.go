@@ -94,7 +94,9 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 		if crossover {
 			crossoverBreedingGround := make([]Genome, 0)
 			for i := 0; i+1 < len(breedingGround); i += 2 {
-				crossoverBreedingGround = append(crossoverBreedingGround, breedingGround[i].Crossover(breedingGround[i+1])...)
+				newOffspring, err := breedingGround[i].Crossover(breedingGround[i+1])
+				check(err)
+				crossoverBreedingGround = append(crossoverBreedingGround, newOffspring...)
 			}
 			breedingGround = crossoverBreedingGround
 			bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
