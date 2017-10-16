@@ -63,3 +63,29 @@ func TestTournament(t *testing.T) {
 		t.Log("Average Fitness no worse after tournament.", "Was:", avgFitnessBefore, "Now:", avgFitnessAfter)
 	}
 }
+
+
+func TestRoulette(t *testing.T) {
+	rand.Seed(time.Now().Unix())
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(RouletteSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
+	population := []Genome{
+		{[]int{1, 1, 1, 1}},
+		{[]int{0, 1, 1, 1}},
+		{[]int{0, 0, 1, 1}},
+		{[]int{0, 0, 0, 1}},
+	}
+	avgFitnessBefore := AverageFitness(population)
+	population = Selection(population)
+	avgFitnessAfter := AverageFitness(population)
+
+	if avgFitnessAfter < avgFitnessBefore {
+		t.Error("Average Fitness decreased after tournament.", "Was:", avgFitnessBefore, "Now:", avgFitnessAfter)
+	} else {
+		t.Log("Average Fitness no worse after tournament.", "Was:", avgFitnessBefore, "Now:", avgFitnessAfter)
+	}
+}
