@@ -6,6 +6,12 @@ import (
 )
 
 func TestDefaultGenerateCandidate(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	expectedLength := 10
 	bitstring := GenerateCandidate(expectedLength)
 	length := len(bitstring)
@@ -28,6 +34,12 @@ func TestDefaultGenerateCandidate(t *testing.T) {
 }
 
 func TestCustomGenerateCandidate(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	SetGenerateCandidate(func(length int) []int {
 		var sequence []int
 		for i := 1; i <= length; i++ {
@@ -54,6 +66,12 @@ func TestCustomGenerateCandidate(t *testing.T) {
 }
 
 func TestGenome_ToString(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	SetFitnessFunc(func(gene Genome) int {
 		count := 0
 		for _, i := range gene.Sequence {

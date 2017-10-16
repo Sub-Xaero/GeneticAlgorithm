@@ -5,6 +5,12 @@ import (
 )
 
 func TestGenome_DefaultFitness(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	genome := Genome{[]int{1, 1, 1, 1}}
 
 	t.Log("Genome:", genome)
@@ -22,6 +28,12 @@ func TestGenome_DefaultFitness(t *testing.T) {
 }
 
 func TestGenome_CustomFitness(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	genome := Genome{[]int{0, 0, 0, 1}}
 	t.Log(genome)
 	t.Log("Setting fitness func to custom...")
@@ -46,6 +58,12 @@ func TestGenome_CustomFitness(t *testing.T) {
 }
 
 func TestAverageFitness(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	t.Log("Setting fitness func to default...")
 	SetFitnessFunc(DefaultFitnessFunc)
 
@@ -67,6 +85,12 @@ func TestAverageFitness(t *testing.T) {
 }
 
 func TestMaxFitness(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	t.Log("Setting fitness func to default...")
 	SetFitnessFunc(DefaultFitnessFunc)
 

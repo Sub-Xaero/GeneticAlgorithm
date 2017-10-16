@@ -1,21 +1,29 @@
 package ga
 
 import (
-	"testing"
 	"fmt"
 	"math/rand"
+	"testing"
 )
 
 func TestGeneticAlgorithm(t *testing.T) {
 	rand.Seed(3)
-	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	fmt.Println(GeneticAlgorithm(10, 10, 50, true, true, false))
 }
 
 func TestFillRandomPopulation(t *testing.T) {
-	SetCrossoverFunc(DefaultCrossoverFunc)
 	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	population := make([]Genome, 0)
 	population = FillRandomPopulation(population, 10, 10)
@@ -32,6 +40,12 @@ func TestFillRandomPopulation(t *testing.T) {
 }
 
 func TestTournament(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	population := []Genome{
 		{[]int{1, 1, 1, 1}},
 		{[]int{0, 1, 1, 1}},

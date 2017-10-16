@@ -6,6 +6,10 @@ import (
 )
 
 func TestCrossover(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	population := []Genome{
@@ -32,6 +36,12 @@ func TestCrossover(t *testing.T) {
 }
 
 func TestSetCrossoverFunc(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	SetCrossoverFunc(func(gene, spouse Genome) []Genome {
 		return []Genome{{[]int{1, 2, 3, 4}}}
 	})

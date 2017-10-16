@@ -6,7 +6,12 @@ import (
 )
 
 func TestSetMutateFunc(t *testing.T) {
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	SetMutateFunc(func(gene Genome) Genome {
 		return Genome{[]int{1, 2, 3, 4}}
 	})
