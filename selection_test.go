@@ -40,7 +40,7 @@ func TestSetSelectionFunc(t *testing.T) {
 }
 
 func TestTournament(t *testing.T) {
-	rand.Seed(time.Now().Unix())
+	rand.Seed(3)
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
@@ -64,9 +64,8 @@ func TestTournament(t *testing.T) {
 	}
 }
 
-
 func TestRoulette(t *testing.T) {
-	rand.Seed(time.Now().Unix())
+	rand.Seed(3)
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(RouletteSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
