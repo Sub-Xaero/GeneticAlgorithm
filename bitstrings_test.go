@@ -43,6 +43,24 @@ func TestDefaultGenerateCandidate(t *testing.T) {
 	}
 }
 
+func TestBadDefaultGenerateCandidate(t *testing.T) {
+	rand.Seed(time.Now().Unix())
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
+	expectedLength := 0
+	_, err := GenerateCandidate(expectedLength)
+
+	if err == nil {
+		t.Error("Bad candidate length did not throw error as it should. Err:", err)
+	} else {
+		t.Log("Successfully threw and caught error:", err)
+	}
+}
+
 func TestCustomGenerateCandidate(t *testing.T) {
 	rand.Seed(time.Now().Unix())
 	SetMutateFunc(DefaultMutateFunc)
