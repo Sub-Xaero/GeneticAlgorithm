@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestCrossover(t *testing.T) {
+func TestDefaultCrossover(t *testing.T) {
 	rand.Seed(3)
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
@@ -42,6 +42,26 @@ func TestCrossover(t *testing.T) {
 		t.Error("Crossover failed.", "Expected:", expectedString, "Got:", offspring)
 	} else {
 		t.Log("Crossover succeeded.", "Expected:", expectedString, "Got:", offspring[foundIndex])
+	}
+}
+
+func TestBadDefaultCrossover(t *testing.T) {
+	rand.Seed(3)
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
+	population := []Genome{
+		{[]int{1, 0, 0, 0}},
+		{[]int{0, 0, 0}},
+	}
+	_, err := population[0].Crossover(population[1])
+	if err == nil {
+		t.Error("Expected error but got:", err)
+	} else {
+		t.Log("Successfuly threw and caught err:", err)
 	}
 }
 

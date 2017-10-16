@@ -7,7 +7,7 @@ import (
 
 var DefaultCrossoverFunc = func(gene, spouse Genome) ([]Genome, error) {
 	if len(gene.Sequence) != len(spouse.Sequence) {
-		return nil, errors.New("strings are not current length")
+		return nil, errors.New("strings are not same length")
 	}
 	crossover := rand.Int() % len(gene.Sequence)
 	return []Genome{
