@@ -16,7 +16,14 @@ func TestDefaultGenerateCandidate(t *testing.T) {
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
 	expectedLength := 10
-	bitstring := GenerateCandidate(expectedLength)
+	bitstring, err := GenerateCandidate(expectedLength)
+
+	if err == nil {
+		t.Log("Successfully generated candidate")
+	} else {
+		t.Error("Unexpected error:", err)
+	}
+
 	length := len(bitstring)
 	if length != expectedLength {
 		t.Error("String is not correct length.", "Expected:", expectedLength, "Got:", length)
@@ -44,16 +51,23 @@ func TestCustomGenerateCandidate(t *testing.T) {
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
-	SetGenerateCandidate(func(length int) []int {
+	SetGenerateCandidate(func(length int) ([]int, error) {
 		var sequence []int
 		for i := 1; i <= length; i++ {
 			sequence = append(sequence, i)
 		}
-		return sequence
+		return sequence, nil
 	})
 
 	expectedLength := 9
-	bitstring := GenerateCandidate(expectedLength)
+	bitstring, err := GenerateCandidate(expectedLength)
+
+	if err == nil {
+		t.Log("Successfully generated candidate")
+	} else {
+		t.Error("Unexpected error:", err)
+	}
+
 	length := len(bitstring)
 	if length != expectedLength {
 		t.Error("String is not correct length.", "Expected:", expectedLength, "Got:", length)

@@ -34,7 +34,10 @@ func (gene Genome) String() string {
 
 func FillRandomPopulation(population []Genome, populationSize, candidateLength int) []Genome {
 	for len(population) < populationSize {
-		population = append(population, Genome{GenerateCandidate(candidateLength)})
+		bitstring, err := GenerateCandidate(candidateLength)
+		check(err)
+
+		population = append(population, Genome{bitstring})
 	}
 	return population
 }
