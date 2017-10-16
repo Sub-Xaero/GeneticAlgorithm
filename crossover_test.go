@@ -2,10 +2,12 @@ package ga
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
 )
 
 func TestCrossover(t *testing.T) {
+	rand.Seed(3)
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
