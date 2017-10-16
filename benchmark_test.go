@@ -3,68 +3,50 @@ package ga
 import (
 	"math/rand"
 	"testing"
-	"time"
 )
 
-func BenchmarkGeneticAlgorithm_10Length(b *testing.B) {
-	rand.Seed(time.Now().Unix())
+var seed int64 = 3
+
+func benchmarkGATournament(length, generations int, terminateEarly bool, b *testing.B) {
+	rand.Seed(seed)
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	length := 10
-	SetFitnessFunc(func(gene Genome) int {
-		count := 0
-		for _, i := range gene.Sequence {
-			if i == 1 {
-				count++
-			}
-		}
-		return count
-	})
-	GeneticAlgorithm(length, length, b.N, true, true, false)
+	for n := 0; n < b.N; n++ {
+		bestCandidate, numIterations, population := GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
+		b.Log("Best Candidate", bestCandidate)
+		b.Log("Num Iterations:", numIterations)
+		b.Log("Population:", population)
+	}
 }
 
-func BenchmarkGeneticAlgorithm_20Length(b *testing.B) {
-	rand.Seed(time.Now().Unix())
+func BenchmarkGATournamentFull_10(b *testing.B)           { benchmarkGATournament(10, 100, false, b) }
+func BenchmarkGATournamentFull_20(b *testing.B)           { benchmarkGATournament(20, 200, false, b) }
+func BenchmarkGATournamentFull_50(b *testing.B)           { benchmarkGATournament(50, 500, false, b) }
+func BenchmarkGATournamentTerminateEarly_10(b *testing.B) { benchmarkGATournament(10, 100, true, b) }
+func BenchmarkGATournamentTerminateEarly_20(b *testing.B) { benchmarkGATournament(20, 200, true, b) }
+func BenchmarkGATournamentTerminateEarly_50(b *testing.B) { benchmarkGATournament(50, 500, true, b) }
+
+func benchmarkGARoulette(length, generations int, terminateEarly bool, b *testing.B) {
+	rand.Seed(seed)
 	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
+	SetSelectionFunc(RouletteSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	length := 20
-	SetFitnessFunc(func(gene Genome) int {
-		count := 0
-		for _, i := range gene.Sequence {
-			if i == 1 {
-				count++
-			}
-		}
-		return count
-	})
-	GeneticAlgorithm(length, length, b.N, true, true, false)
+	for n := 0; n < b.N; n++ {
+		bestCandidate, numIterations, population := GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
+		b.Log("Best Candidate", bestCandidate)
+		b.Log("Num Iterations:", numIterations)
+		b.Log("Population:", population)
+	}
 }
 
-func BenchmarkGeneticAlgorithm_50Length(b *testing.B) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	length := 50
-	SetFitnessFunc(func(gene Genome) int {
-		count := 0
-		for _, i := range gene.Sequence {
-			if i == 1 {
-				count++
-			}
-		}
-		return count
-	})
-	GeneticAlgorithm(length, length, b.N, true, true, false)
-}
+func BenchmarkGARouletteFull_10(b *testing.B)           { benchmarkGARoulette(10, 100, false, b) }
+func BenchmarkGARouletteFull_20(b *testing.B)           { benchmarkGARoulette(20, 200, false, b) }
+func BenchmarkGARouletteFull_50(b *testing.B)           { benchmarkGARoulette(50, 500, false, b) }
+func BenchmarkGARouletteTerminateEarly_10(b *testing.B) { benchmarkGARoulette(10, 100, true, b) }
+func BenchmarkGARouletteTerminateEarly_20(b *testing.B) { benchmarkGARoulette(20, 200, true, b) }
+func BenchmarkGARouletteTerminateEarly_50(b *testing.B) { benchmarkGARoulette(50, 500, true, b) }
