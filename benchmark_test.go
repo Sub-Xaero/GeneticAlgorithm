@@ -6,6 +6,11 @@ import (
 )
 
 var seed int64 = 3
+var (
+	globalBestCandidate Genome
+	globalNumIterations int
+	globalPopulation    []Genome
+)
 
 func benchmarkGATournament(length, generations int, terminateEarly bool, b *testing.B) {
 	rand.Seed(seed)
@@ -14,12 +19,20 @@ func benchmarkGATournament(length, generations int, terminateEarly bool, b *test
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	var (
+		bestCandidate Genome
+		numIterations int
+		population    []Genome
+	)
 	for n := 0; n < b.N; n++ {
-		bestCandidate, numIterations, population := GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
+		bestCandidate, numIterations, population = GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
 		b.Log("Best Candidate", bestCandidate)
 		b.Log("Num Iterations:", numIterations)
 		b.Log("Population:", population)
 	}
+	globalBestCandidate = bestCandidate
+	globalNumIterations = numIterations
+	globalPopulation = population
 }
 
 func BenchmarkGATournamentFull_10(b *testing.B)           { benchmarkGATournament(10, 100, false, b) }
@@ -36,12 +49,20 @@ func benchmarkGARoulette(length, generations int, terminateEarly bool, b *testin
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	var (
+		bestCandidate Genome
+		numIterations int
+		population    []Genome
+	)
 	for n := 0; n < b.N; n++ {
-		bestCandidate, numIterations, population := GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
+		bestCandidate, numIterations, population = GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
 		b.Log("Best Candidate", bestCandidate)
 		b.Log("Num Iterations:", numIterations)
 		b.Log("Population:", population)
 	}
+	globalBestCandidate = bestCandidate
+	globalNumIterations = numIterations
+	globalPopulation = population
 }
 
 func BenchmarkGARouletteFull_10(b *testing.B)           { benchmarkGARoulette(10, 100, false, b) }
