@@ -1,10 +1,13 @@
 package ga
 
 import (
+	"math/rand"
 	"testing"
+	"time"
 )
 
 func BenchmarkGeneticAlgorithm_10Length(b *testing.B) {
+	rand.Seed(time.Now().Unix())
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
@@ -25,6 +28,7 @@ func BenchmarkGeneticAlgorithm_10Length(b *testing.B) {
 }
 
 func BenchmarkGeneticAlgorithm_20Length(b *testing.B) {
+	rand.Seed(time.Now().Unix())
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
@@ -45,6 +49,7 @@ func BenchmarkGeneticAlgorithm_20Length(b *testing.B) {
 }
 
 func BenchmarkGeneticAlgorithm_50Length(b *testing.B) {
+	rand.Seed(time.Now().Unix())
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)

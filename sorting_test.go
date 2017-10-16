@@ -2,11 +2,20 @@ package ga
 
 import (
 	"fmt"
+	"math/rand"
 	"sort"
 	"testing"
+	"time"
 )
 
 func TestSort(t *testing.T) {
+	rand.Seed(time.Now().Unix())
+	SetMutateFunc(DefaultMutateFunc)
+	SetSelectionFunc(TournamentSelection)
+	SetFitnessFunc(DefaultFitnessFunc)
+	SetGenerateCandidate(DefaultGenerateCandidate)
+	SetCrossoverFunc(DefaultCrossoverFunc)
+
 	SetFitnessFunc(func(gene Genome) int {
 		count := 0
 		for _, i := range gene.Sequence {

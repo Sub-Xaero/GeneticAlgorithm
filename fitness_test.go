@@ -1,10 +1,13 @@
 package ga
 
 import (
+	"math/rand"
 	"testing"
+	"time"
 )
 
 func TestGenome_DefaultFitness(t *testing.T) {
+	rand.Seed(time.Now().Unix())
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
@@ -28,6 +31,7 @@ func TestGenome_DefaultFitness(t *testing.T) {
 }
 
 func TestGenome_CustomFitness(t *testing.T) {
+	rand.Seed(time.Now().Unix())
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
@@ -58,6 +62,7 @@ func TestGenome_CustomFitness(t *testing.T) {
 }
 
 func TestAverageFitness(t *testing.T) {
+	rand.Seed(time.Now().Unix())
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
@@ -85,6 +90,7 @@ func TestAverageFitness(t *testing.T) {
 }
 
 func TestMaxFitness(t *testing.T) {
+	rand.Seed(time.Now().Unix())
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)

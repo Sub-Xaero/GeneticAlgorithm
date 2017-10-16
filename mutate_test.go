@@ -2,10 +2,13 @@ package ga
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
+	"time"
 )
 
 func TestSetMutateFunc(t *testing.T) {
+	rand.Seed(time.Now().Unix())
 	SetMutateFunc(DefaultMutateFunc)
 	SetSelectionFunc(TournamentSelection)
 	SetFitnessFunc(DefaultFitnessFunc)
