@@ -58,8 +58,8 @@ func TestTournament(t *testing.T) {
 	avgFitnessAfter := AverageFitness(population)
 
 	if avgFitnessAfter < avgFitnessBefore {
-		t.Error("Fitness decreased after tournament.", "Was:", avgFitnessBefore, "Now:", avgFitnessAfter)
+		t.Error("Average Fitness decreased after tournament.", "Was:", avgFitnessBefore, "Now:", avgFitnessAfter)
 	} else {
-		t.Log("Fitness no worse after tournament.", "Was:", avgFitnessBefore, "Now:", avgFitnessAfter)
+		t.Log("Average Fitness no worse after tournament.", "Was:", avgFitnessBefore, "Now:", avgFitnessAfter)
 	}
 }
