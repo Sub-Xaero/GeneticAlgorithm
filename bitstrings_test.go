@@ -6,17 +6,24 @@ import (
 )
 
 func TestDefaultGenerateCandidate(t *testing.T) {
-	bitstring := GenerateCandidate(10)
-
-	if len(bitstring) != 10 {
-		t.Error("String is not correct length")
+	expectedLength := 10
+	bitstring := GenerateCandidate(expectedLength)
+	length := len(bitstring)
+	if length != expectedLength {
+		t.Error("String is not correct length.", "Expected:", expectedLength, "Got:", length)
+	} else {
+		t.Log("String is correct length", "Expected:", expectedLength, "Got:", length)
 	}
+
+	expectedSum := 20
 	sum := 0
 	for _, i := range bitstring {
 		sum += i
 	}
 	if sum >= 20 {
-		t.Error("String is not correct value")
+		t.Error("String is not correct value.", "Expected:", expectedSum, "Got:", sum)
+	} else {
+		t.Log("String is correct length.", "Expected:", expectedSum, "Got:", sum)
 	}
 }
 
@@ -28,15 +35,21 @@ func TestCustomGenerateCandidate(t *testing.T) {
 		}
 		return sequence
 	})
-	bitstring := GenerateCandidate(9)
 
-	if len(bitstring) != 9 {
-		t.Error("String is not correct length", bitstring)
+	expectedLength := 9
+	bitstring := GenerateCandidate(expectedLength)
+	length := len(bitstring)
+	if length != expectedLength {
+		t.Error("String is not correct length.", "Expected:", expectedLength, "Got:", length)
+	} else {
+		t.Log("String is correct length. Expected:", expectedLength, "Got:", length)
 	}
 
 	expected := "[1 2 3 4 5 6 7 8 9]"
 	if fmt.Sprint(bitstring) != expected {
-		t.Error("String is not correct string:", bitstring, "Expected:", expected)
+		t.Error("String is not correct string.", "Expected:", expected, "Got:", bitstring)
+	} else {
+		t.Log("String is correct string.", "Expected:", expected, "Got:", bitstring)
 	}
 }
 
