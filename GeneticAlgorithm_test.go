@@ -40,25 +40,3 @@ func TestFillRandomPopulation(t *testing.T) {
 		}
 	}
 }
-
-func TestTournament(t *testing.T) {
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-
-	population := []Genome{
-		{[]int{1, 1, 1, 1}},
-		{[]int{0, 1, 1, 1}},
-		{[]int{0, 0, 1, 1}},
-		{[]int{0, 0, 0, 1}},
-	}
-	avgFitnessBefore := AverageFitness(population)
-	population = Selection(population)
-	avgFitnessAfter := AverageFitness(population)
-
-	if avgFitnessAfter < avgFitnessBefore {
-		t.Error("Fitness decreased after tournament")
-	}
-}
