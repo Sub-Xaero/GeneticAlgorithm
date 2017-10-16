@@ -20,7 +20,10 @@ func TestSetMutateFunc(t *testing.T) {
 	})
 
 	output := fmt.Sprint(Genome{[]int{}}.Mutate())
-	if output != "{[1 2 3 4],   1}" {
-		t.Error("Mutate function not set", output)
+	expectedOutput := "{[1 2 3 4],   1}"
+	if output != expectedOutput {
+		t.Error("Mutate function not set. Expected:", expectedOutput, "Got:", output)
+	} else {
+		t.Log("Mutate function was set successfully. Expected:", expectedOutput, "Got:", output)
 	}
 }
