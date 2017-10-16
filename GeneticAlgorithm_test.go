@@ -39,7 +39,7 @@ func TestTournament(t *testing.T) {
 		{[]int{0, 0, 0, 1}},
 	}
 	avgFitnessBefore := AverageFitness(population)
-	population = Tournament(population)
+	population = Selection(population)
 	avgFitnessAfter := AverageFitness(population)
 
 	if avgFitnessAfter < avgFitnessBefore {
