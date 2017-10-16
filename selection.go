@@ -23,6 +23,20 @@ var TournamentSelection func([]Genome) []Genome = func(population []Genome) []Ge
 
 var RouletteSelection func([]Genome) []Genome = func(population []Genome) []Genome {
 	offspring := make([]Genome, 0)
+	for range population {
+		weightSum := 0
+		for _, val := range population {
+			weightSum += val.Fitness()
+		}
+		choice := rand.Float32() * float32(weightSum)
+		for _, val := range population {
+			choice -= float32(val.Fitness())
+			if choice <= 0 {
+				offspring = append(offspring, val.Copy())
+				break
+			}
+		}
+	}
 	return offspring
 }
 
