@@ -7,46 +7,24 @@ import (
 func TestGenome_DefaultFitness(t *testing.T) {
 	genome := Genome{[]int{1, 1, 1, 1}}
 
-	if genome.Fitness() != 4 {
-		t.Error("String is not correct fitness")
-	}
+	t.Log("Genome:", genome)
+	t.Log("Setting fitness func to default...")
+	SetFitnessFunc(DefaultFitnessFunc)
 
-	genome = Genome{[]int{0, 0, 1, 1}}
+	expectedFitness := 4
+	gotFitness := genome.Fitness()
 
-	SetFitnessFunc(func(gene Genome) int {
-		count := 0
-		for _, i := range gene.Sequence {
-			if i == 0 {
-				count++
-			}
-		}
-		return count
-	})
-
-	if genome.Fitness() != 2 {
-		t.Error("String is not correct fitness")
+	if gotFitness != expectedFitness {
+		t.Error("String is not correct fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
+	} else {
+		t.Log("String is correct fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	}
 }
 
 func TestGenome_CustomFitness(t *testing.T) {
-	genome := Genome{[]int{1, 1, 1, 1}}
-
-	SetFitnessFunc(func(gene Genome) int {
-		count := 0
-		for _, i := range gene.Sequence {
-			if i == 1 {
-				count++
-			}
-		}
-		return count
-	})
-
-	if genome.Fitness() != 4 {
-		t.Error("String is not correct fitness")
-	}
-
-	genome = Genome{[]int{0, 0, 1, 1}}
-
+	genome := Genome{[]int{0, 0, 0, 1}}
+	t.Log(genome)
+	t.Log("Setting fitness func to custom...")
 	SetFitnessFunc(func(gene Genome) int {
 		count := 0
 		for _, i := range gene.Sequence {
@@ -57,43 +35,40 @@ func TestGenome_CustomFitness(t *testing.T) {
 		return count
 	})
 
-	if genome.Fitness() != 2 {
-		t.Error("String is not correct fitness")
+	expectedFitness := 3
+	gotFitness := genome.Fitness()
+
+	if gotFitness != expectedFitness {
+		t.Error("String is not correct fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
+	} else {
+		t.Log("String is correct fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	}
 }
 
 func TestAverageFitness(t *testing.T) {
-	SetFitnessFunc(func(gene Genome) int {
-		count := 0
-		for _, i := range gene.Sequence {
-			if i == 1 {
-				count++
-			}
-		}
-		return count
-	})
+	t.Log("Setting fitness func to default...")
+	SetFitnessFunc(DefaultFitnessFunc)
+
 	population := []Genome{
 		{[]int{1, 1, 1, 1}},
 		{[]int{1, 1, 1, 1}},
 		{[]int{0, 0, 0, 0}},
 		{[]int{0, 0, 0, 0}},
 	}
+	t.Log("Created population:", population)
 
-	if AverageFitness(population) != 2 {
-		t.Error("Incorrect average fitness")
+	expectedFitness := 2
+	gotFitness := AverageFitness(population)
+	if gotFitness != expectedFitness {
+		t.Error("Incorrect average fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
+	} else {
+		t.Log("Correct average fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	}
 }
 
 func TestMaxFitness(t *testing.T) {
-	SetFitnessFunc(func(gene Genome) int {
-		count := 0
-		for _, i := range gene.Sequence {
-			if i == 1 {
-				count++
-			}
-		}
-		return count
-	})
+	t.Log("Setting fitness func to default...")
+	SetFitnessFunc(DefaultFitnessFunc)
 
 	population := []Genome{
 		{[]int{1, 1, 1, 1, 1, 1, 1, 1}},
@@ -101,11 +76,17 @@ func TestMaxFitness(t *testing.T) {
 		{[]int{0, 0, 0, 0, 0, 0, 0, 0}},
 		{[]int{0, 0, 0, 0, 0, 0, 0, 0}},
 	}
+	t.Log("Created population:", population)
 
-	if MaxFitness(population) != 8 {
-		t.Error("Incorrect max fitness")
+	expectedFitness := 8
+	gotFitness := MaxFitness(population)
+	if gotFitness != expectedFitness {
+		t.Error("Incorrect max fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
+	} else {
+		t.Log("Correct max fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	}
 
+	t.Log("Setting fitness func to custom...")
 	SetFitnessFunc(func(gene Genome) int {
 		count := 0
 		for _, i := range gene.Sequence {
@@ -122,8 +103,13 @@ func TestMaxFitness(t *testing.T) {
 		{[]int{0, 0, 0, 0, 0, 0, 0, 0}},
 		{[]int{0, 0, 0, 0, 0, 0, 0, 0}},
 	}
+	t.Log("Created population:", population)
 
-	if MaxFitness(population) != 8 {
-		t.Error("Incorrect max fitness")
+	expectedFitness = 8
+	gotFitness = MaxFitness(population)
+	if gotFitness != expectedFitness {
+		t.Error("Incorrect max fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
+	} else {
+		t.Log("Correct max fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	}
 }
