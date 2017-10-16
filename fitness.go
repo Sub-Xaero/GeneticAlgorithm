@@ -21,7 +21,7 @@ func MaxFitnessCandidate(population []Genome) Genome {
 			maxGene = i
 		}
 	}
-	return maxGene
+	return maxGene.Copy()
 }
 
 // MaxFitness returns the highest fitness found in a [] Genome population

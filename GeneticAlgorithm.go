@@ -19,6 +19,12 @@ type Genome struct {
 	Sequence []int
 }
 
+func (gene Genome) Copy() Genome {
+	sequence := make([]int, len(gene.Sequence))
+	copy(sequence, gene.Sequence)
+	return Genome{sequence}
+}
+
 func (gene Genome) String() string {
 	if len(gene.Sequence) <= 10 {
 		return fmt.Sprintf("{%v, %3v}", gene.Sequence, gene.Fitness())
@@ -63,7 +69,6 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 	check(err)
 	defer f.Close()
 	defer f.Sync()
-
 	outputString := strings.Join([]string{"Iteration", "AverageFitness", "MaxFitness", "\n"}, ",")
 	f.WriteString(outputString)
 
