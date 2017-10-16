@@ -235,16 +235,22 @@ func TestFillRandomPopulation(t *testing.T) {
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
 
+	expectedLen := 10
 	population := make([]Genome, 0)
-	population = FillRandomPopulation(population, 10, 10)
+	population = FillRandomPopulation(population, expectedLen, expectedLen)
+	gotLen := len(population)
 
-	if len(population) != 10 {
-		t.Error("Population not filled to specified size")
+	if gotLen != expectedLen {
+		t.Error("Population not filled to specified size. Expected:", expectedLen, "Got:", gotLen)
+	} else {
+		t.Log("Population successfuly filled to specified size. Expected:", expectedLen, "Got:", gotLen)
 	}
 
-	for _, val := range population {
+	for i, val := range population {
 		if len(val.Sequence) == 0 {
-			t.Error("Bitstrings in population are empty")
+			t.Error("Bitstring:", i, " in population is empty")
+		} else {
+			t.Log("Bitstring:", i, " in population successfully filled")
 		}
 	}
 }
