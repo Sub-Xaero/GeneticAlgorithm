@@ -2,7 +2,6 @@ package ga
 
 import (
 	"fmt"
-	"math/rand"
 	"os"
 	"strconv"
 	"strings"
@@ -31,24 +30,6 @@ func (gene Genome) String() string {
 	} else {
 		return fmt.Sprintf("%v", gene.Fitness())
 	}
-}
-
-// Tournament returns a [] Genome population composed of the best out of randomly selected pairs
-func Tournament(population []Genome) []Genome {
-	offspring := make([]Genome, 0)
-
-	for i := 0; i < len(population); i++ {
-		parent1 := population[rand.Int()%len(population)]
-		parent2 := population[rand.Int()%len(population)]
-
-		if parent1.Fitness() > parent2.Fitness() {
-			offspring = append(offspring, parent1)
-		} else {
-			offspring = append(offspring, parent2)
-		}
-	}
-
-	return offspring
 }
 
 func FillRandomPopulation(population []Genome, populationSize, candidateLength int) []Genome {
@@ -93,7 +74,7 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 
 		// Tournament
 		breedingGround := make([]Genome, 0)
-		breedingGround = append(breedingGround, Tournament(population)...)
+		breedingGround = append(breedingGround, Selection(population)...)
 		bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
 		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
 			bestCandidate = bestCandidateOfGeneration
