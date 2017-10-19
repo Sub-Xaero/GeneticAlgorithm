@@ -29,7 +29,7 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
-	fmt.Println(bestCandidate, finalPopulation)
+	Output(bestCandidate, finalPopulation)
 
 	gotFitness := bestCandidate.Fitness()
 	if gotFitness < expectedFitness {
