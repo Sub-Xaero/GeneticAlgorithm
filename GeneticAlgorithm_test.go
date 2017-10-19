@@ -13,6 +13,7 @@ const (
 )
 
 func testGA(length, generations, expectedFitness, selectionMethod int, terminateEarly bool, t *testing.T) {
+	t.Parallel()
 	rand.Seed(3)
 
 	switch selectionMethod {
