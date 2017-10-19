@@ -76,12 +76,9 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 		var bestCandidateOfGeneration Genome
 
 		bestCandidateOfGeneration = MaxFitnessCandidate(population)
-		if bestCandidateOfGeneration.Fitness() > bestCandidate.Fitness() {
-			bestCandidate = bestCandidateOfGeneration
-			iterationsSinceChange = 0
-		}
-		fmt.Println("Iteration", y)
-		fmt.Println("Start Population      :", population, "Average:", AverageFitness(population), "Max:", MaxFitness(population), "Best:", bestCandidateOfGeneration.Sequence)
+		UpdateBestCandidate(&bestCandidate, bestCandidateOfGeneration, &iterationsSinceChange)
+		Output("Iteration", y)
+		Output("Start Population      :", population, "Average:", AverageFitness(population), "Max:", MaxFitness(population), "Best:", bestCandidateOfGeneration.Sequence)
 
 		// Tournament
 		breedingGround := make([]Genome, 0)
