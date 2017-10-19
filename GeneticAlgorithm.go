@@ -26,9 +26,9 @@ func (gene Genome) Copy() Genome {
 
 func (gene Genome) String() string {
 	if len(gene.Sequence) <= 10 {
-		return fmt.Sprintf("{%v, %3v}", gene.Sequence, gene.Fitness())
+		return fmt.Sprintf("{%v, %3v}", gene.Sequence, Fitness(gene))
 	} else {
-		return fmt.Sprintf("%v", gene.Fitness())
+		return fmt.Sprintf("%v", Fitness(gene))
 	}
 }
 
@@ -65,7 +65,7 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 	bestCandidate = population[0]
 
 	UpdateBestCandidate := func(bestOverall *Genome, bestGeneration Genome, iterationsSinceChange *int) {
-		if bestGeneration.Fitness() > bestOverall.Fitness() {
+		if Fitness(bestGeneration) > Fitness(*bestOverall) {
 			*bestOverall = bestGeneration
 			*iterationsSinceChange = 0
 		}
@@ -91,7 +91,7 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 		if crossover {
 			crossoverBreedingGround := make([]Genome, 0)
 			for i := 0; i+1 < len(breedingGround); i += 2 {
-				newOffspring, err := breedingGround[i].Crossover(breedingGround[i+1])
+				newOffspring, err := Crossover(breedingGround[i], breedingGround[i+1])
 				check(err)
 				crossoverBreedingGround = append(crossoverBreedingGround, newOffspring...)
 			}
@@ -104,7 +104,7 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 		// Mutation
 		if mutate {
 			for index := range breedingGround {
-				breedingGround[index] = breedingGround[index].Mutate()
+				breedingGround[index] = Mutate(breedingGround[index])
 			}
 			bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
 			UpdateBestCandidate(&bestCandidate, bestCandidateOfGeneration, &iterationsSinceChange)
@@ -124,11 +124,11 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 
 		if terminateEarly && float32(iterationsSinceChange) > float32(generations)*0.25 {
 			Output("Termination : Stagnating change")
-			Output("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
+			Output("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", Fitness(bestCandidate))
 			return bestCandidate, numGenerations, population
 		}
 	}
 
-	Output("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
+	Output("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", Fitness(bestCandidate))
 	return bestCandidate, numGenerations, population
 }

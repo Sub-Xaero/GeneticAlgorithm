@@ -23,6 +23,6 @@ func SetCrossoverFunc(f func(Genome, Genome) ([]Genome, error)) {
 }
 
 // Crossover applies a function, set by SetCrossoverFunc to the receiver gene and a specified pair
-func (gene Genome) Crossover(spouse Genome) ([]Genome, error) {
+func Crossover(gene, spouse Genome) ([]Genome, error) {
 	return crossoverFunc(gene, spouse)
 }

@@ -4,7 +4,7 @@ package ga
 func AverageFitness(population []Genome) int {
 	var average int = 0
 	for _, i := range population {
-		average += i.Fitness()
+		average += Fitness(i)
 	}
 	return average / int(len(population))
 }
@@ -16,8 +16,8 @@ func MaxFitnessCandidate(population []Genome) Genome {
 		maxGene Genome
 	)
 	for _, i := range population {
-		if i.Fitness() > max {
-			max = i.Fitness()
+		if Fitness(i) > max {
+			max = Fitness(i)
 			maxGene = i
 		}
 	}
@@ -26,7 +26,7 @@ func MaxFitnessCandidate(population []Genome) Genome {
 
 // MaxFitness returns the highest fitness found in a [] Genome population
 func MaxFitness(population []Genome) int {
-	return MaxFitnessCandidate(population).Fitness()
+	return Fitness(MaxFitnessCandidate(population))
 }
 
 var DefaultFitnessFunc func(gene Genome) int = func(gene Genome) int {
@@ -46,6 +46,6 @@ func SetFitnessFunc(f func(gene Genome) int) {
 }
 
 // Fitness calculates the suitability of a candidate solution and returns an integral score value
-func (gene Genome) Fitness() int {
+func Fitness(gene Genome) int {
 	return fitnessFunc(gene)
 }

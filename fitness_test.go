@@ -22,7 +22,7 @@ func TestGenome_DefaultFitness(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 
 	expectedFitness := 4
-	gotFitness := genome.Fitness()
+	gotFitness := Fitness(genome)
 
 	if gotFitness != expectedFitness {
 		t.Error("String is not correct fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
@@ -54,7 +54,7 @@ func TestGenome_CustomFitness(t *testing.T) {
 	})
 
 	expectedFitness := 3
-	gotFitness := genome.Fitness()
+	gotFitness := Fitness(genome)
 
 	if gotFitness != expectedFitness {
 		t.Error("String is not correct fitness.", "Expected:", expectedFitness, "Got:", gotFitness)

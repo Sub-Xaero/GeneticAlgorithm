@@ -20,7 +20,7 @@ func TestDefaultCrossover(t *testing.T) {
 		{[]int{1, 0, 0, 0}},
 		{[]int{0, 0, 0, 1}},
 	}
-	offspring, err := population[0].Crossover(population[1])
+	offspring, err := Crossover(population[0], population[1])
 
 	if err != nil {
 		t.Error("Unexpected error:", err)
@@ -59,7 +59,7 @@ func TestBadDefaultCrossover(t *testing.T) {
 		{[]int{1, 0, 0, 0}},
 		{[]int{0, 0, 0}},
 	}
-	_, err := population[0].Crossover(population[1])
+	_, err := Crossover(population[0], population[1])
 	if err == nil {
 		t.Error("Expected error but got:", err)
 	} else {
@@ -81,7 +81,7 @@ func TestSetCrossoverFunc(t *testing.T) {
 	})
 
 	expectedString := "[{[1 2 3 4],   1}]"
-	crossoverGene, err := Genome{[]int{}}.Crossover(Genome{[]int{}})
+	crossoverGene, err := Crossover(Genome{[]int{}}, Genome{[]int{}})
 
 	if err != nil {
 		t.Error("Unexpected error:", err)

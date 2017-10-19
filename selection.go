@@ -11,7 +11,7 @@ var TournamentSelection func([]Genome) []Genome = func(population []Genome) []Ge
 		parent1 := population[rand.Int()%len(population)]
 		parent2 := population[rand.Int()%len(population)]
 
-		if parent1.Fitness() > parent2.Fitness() {
+		if Fitness(parent1) > Fitness(parent2) {
 			offspring = append(offspring, parent1)
 		} else {
 			offspring = append(offspring, parent2)
@@ -26,11 +26,11 @@ var RouletteSelection func([]Genome) []Genome = func(population []Genome) []Geno
 	for range population {
 		weightSum := 0
 		for _, val := range population {
-			weightSum += val.Fitness()
+			weightSum += Fitness(val)
 		}
 		choice := rand.Float32() * float32(weightSum)
 		for _, val := range population {
-			choice -= float32(val.Fitness())
+			choice -= float32(Fitness(val))
 			if choice <= 0 {
 				offspring = append(offspring, val.Copy())
 				break

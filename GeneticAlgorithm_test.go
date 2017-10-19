@@ -29,7 +29,7 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
 	Output(bestCandidate, finalPopulation)
 
-	gotFitness := bestCandidate.Fitness()
+	gotFitness := Fitness(bestCandidate)
 	if gotFitness < expectedFitness {
 		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
 	} else {

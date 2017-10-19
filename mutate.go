@@ -21,6 +21,6 @@ func SetMutateFunc(f func(gene Genome) Genome) {
 }
 
 // Mutate returns a bitstring with bits mutated by a function set by SetMutateFunc
-func (gene Genome) Mutate() Genome {
+func Mutate(gene Genome) Genome {
 	return mutateFunc(gene)
 }
