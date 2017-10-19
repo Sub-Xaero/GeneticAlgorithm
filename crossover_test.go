@@ -4,23 +4,18 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
-	"time"
 )
 
 func TestDefaultCrossover(t *testing.T) {
+	t.Parallel()
 	rand.Seed(3)
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
-
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 	population := []Genome{
 		{[]int{1, 0, 0, 0}},
 		{[]int{0, 0, 0, 1}},
 	}
-	offspring, err := Crossover(population[0], population[1])
+	offspring, err := genA.Crossover(population[0], population[1])
 
 	if err != nil {
 		t.Error("Unexpected error:", err)
@@ -31,7 +26,7 @@ func TestDefaultCrossover(t *testing.T) {
 	found := false
 	foundIndex := 0
 
-	expectedString := "{[1 0 0 1],   2}"
+	expectedString := "{[1 0 0 1]}"
 	for i, val := range offspring {
 		if fmt.Sprint(val) == expectedString {
 			found = true
@@ -47,19 +42,16 @@ func TestDefaultCrossover(t *testing.T) {
 }
 
 func TestBadDefaultCrossover(t *testing.T) {
+	t.Parallel()
 	rand.Seed(3)
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	population := []Genome{
 		{[]int{1, 0, 0, 0}},
 		{[]int{0, 0, 0}},
 	}
-	_, err := Crossover(population[0], population[1])
+	_, err := genA.Crossover(population[0], population[1])
 	if err == nil {
 		t.Error("Expected error but got:", err)
 	} else {
@@ -68,20 +60,17 @@ func TestBadDefaultCrossover(t *testing.T) {
 }
 
 func TestSetCrossoverFunc(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	SetCrossoverFunc(func(gene, spouse Genome) ([]Genome, error) {
+	genA.SetCrossoverFunc(func(gene, spouse Genome) ([]Genome, error) {
 		return []Genome{{[]int{1, 2, 3, 4}}}, nil
 	})
 
-	expectedString := "[{[1 2 3 4],   1}]"
-	crossoverGene, err := Crossover(Genome{[]int{}}, Genome{[]int{}})
+	expectedString := "[{[1 2 3 4]}]"
+	crossoverGene, err := genA.Crossover(Genome{[]int{}}, Genome{[]int{}})
 
 	if err != nil {
 		t.Error("Unexpected error:", err)

@@ -5,7 +5,9 @@ import (
 	"math/rand"
 )
 
-var DefaultCrossoverFunc = func(gene, spouse Genome) ([]Genome, error) {
+type CrossoverFunction func(Genome, Genome) ([]Genome, error)
+
+var DefaultCrossoverFunc CrossoverFunction = func(gene, spouse Genome) ([]Genome, error) {
 	if len(gene.Sequence) != len(spouse.Sequence) {
 		return nil, errors.New("strings are not same length")
 	}
@@ -15,14 +17,8 @@ var DefaultCrossoverFunc = func(gene, spouse Genome) ([]Genome, error) {
 		{append(append(make([]int, 0), spouse.Sequence[:crossover]...), gene.Sequence[crossover:]...)},
 	}, nil
 }
-var crossoverFunc = DefaultCrossoverFunc
 
 // SetCrossoverFunc changes the crossover function to the function specified
-func SetCrossoverFunc(f func(Genome, Genome) ([]Genome, error)) {
-	crossoverFunc = f
-}
-
-// Crossover applies a function, set by SetCrossoverFunc to the receiver gene and a specified pair
-func Crossover(gene, spouse Genome) ([]Genome, error) {
-	return crossoverFunc(gene, spouse)
+func (genA *GeneticAlgorithm) SetCrossoverFunc(f CrossoverFunction) {
+	genA.Crossover = f
 }

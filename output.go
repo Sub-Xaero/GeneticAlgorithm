@@ -6,8 +6,6 @@ var PrintToConsole = func(a ...interface{}) {
 	fmt.Println(a...)
 }
 
-var Output = PrintToConsole
-
-func SetOutputFunc(f func(a ...interface{})) {
-	Output = f
+func (genA *GeneticAlgorithm) SetOutputFunc(f func(a ...interface{})) {
+	genA.Output = f
 }

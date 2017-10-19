@@ -4,24 +4,20 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
-	"time"
 )
 
 func TestSetMutateFunc(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	SetMutateFunc(func(gene Genome) Genome {
+	genA.SetMutateFunc(func(gene Genome) Genome {
 		return Genome{[]int{1, 2, 3, 4}}
 	})
 
-	output := fmt.Sprint(Mutate(Genome{[]int{}}))
-	expectedOutput := "{[1 2 3 4],   1}"
+	output := fmt.Sprint(genA.Mutate(Genome{[]int{}}))
+	expectedOutput := "{[1 2 3 4]}"
 	if output != expectedOutput {
 		t.Error("Mutate function not set. Expected:", expectedOutput, "Got:", output)
 	} else {

@@ -4,20 +4,16 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
-	"time"
 )
 
 func TestDefaultGenerateCandidate(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	expectedLength := 10
-	bitstring, err := GenerateCandidate(expectedLength)
+	bitstring, err := genA.GenerateCandidate(expectedLength)
 
 	if err == nil {
 		t.Log("Successfully generated candidate")
@@ -45,16 +41,13 @@ func TestDefaultGenerateCandidate(t *testing.T) {
 }
 
 func TestBadDefaultGenerateCandidate(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	expectedLength := 0
-	_, err := GenerateCandidate(expectedLength)
+	_, err := genA.GenerateCandidate(expectedLength)
 
 	if err == nil {
 		t.Error("Bad candidate length did not throw error as it should. Err:", err)
@@ -64,15 +57,12 @@ func TestBadDefaultGenerateCandidate(t *testing.T) {
 }
 
 func TestCustomGenerateCandidate(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	SetGenerateCandidate(func(length int) ([]int, error) {
+	genA.SetGenerateCandidate(func(length int) ([]int, error) {
 		var sequence []int
 		for i := 1; i <= length; i++ {
 			sequence = append(sequence, i)
@@ -81,7 +71,7 @@ func TestCustomGenerateCandidate(t *testing.T) {
 	})
 
 	expectedLength := 9
-	bitstring, err := GenerateCandidate(expectedLength)
+	bitstring, err := genA.GenerateCandidate(expectedLength)
 
 	if err == nil {
 		t.Log("Successfully generated candidate")
@@ -105,15 +95,12 @@ func TestCustomGenerateCandidate(t *testing.T) {
 }
 
 func TestGenome_ToString(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	SetFitnessFunc(func(gene Genome) int {
+	genA.SetFitnessFunc(func(gene Genome) int {
 		count := 0
 		for _, i := range gene.Sequence {
 			if i == 1 {
@@ -124,25 +111,25 @@ func TestGenome_ToString(t *testing.T) {
 	})
 
 	outputString := Genome{[]int{1, 1, 1, 1}}.String()
-	expected := "{[1 1 1 1],   4}"
+	expected := "{[1 1 1 1]}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
 
 	outputString = Genome{[]int{1, 0, 1, 0, 1, 0, 1, 0, 1, 0}}.String()
-	expected = "{[1 0 1 0 1 0 1 0 1 0],   5}"
+	expected = "{[1 0 1 0 1 0 1 0 1 0]}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
 
 	outputString = Genome{[]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}}.String()
-	expected = "{[1 1 1 1 1 1 1 1 1 1],  10}"
+	expected = "{[1 1 1 1 1 1 1 1 1 1]}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
 
 	outputString = Genome{[]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}}.String()
-	expected = "12"
+	expected = "{[1 1 1 1 1 1 1 1 1 1 1 1]}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}

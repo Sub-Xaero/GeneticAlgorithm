@@ -5,8 +5,10 @@ import (
 	"math/rand"
 )
 
+type GenerateCandidateFunction func(length int) ([]int, error)
+
 // GenerateBitString returns an encoded string as set by calls SetGenerateBitString. Defaults to binary strings
-var DefaultGenerateCandidate = func(length int) ([]int, error) {
+var DefaultGenerateCandidate GenerateCandidateFunction = func(length int) ([]int, error) {
 	if length <= 0 {
 		return nil, errors.New("strings cannot be zero-length")
 	}
@@ -17,9 +19,7 @@ var DefaultGenerateCandidate = func(length int) ([]int, error) {
 	return sequence, nil
 }
 
-var GenerateCandidate func(int) ([]int, error) = DefaultGenerateCandidate
-
 // SetGenerateBitString sets the function that generates the bitstring population
-func SetGenerateCandidate(f func(length int) ([]int, error)) {
-	GenerateCandidate = f
+func (genA *GeneticAlgorithm) SetGenerateCandidate(f GenerateCandidateFunction) {
+	genA.GenerateCandidate = f
 }

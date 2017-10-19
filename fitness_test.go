@@ -3,26 +3,22 @@ package ga
 import (
 	"math/rand"
 	"testing"
-	"time"
 )
 
 func TestGenome_DefaultFitness(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genome := Genome{[]int{1, 1, 1, 1}}
 
 	t.Log("Genome:", genome)
 	t.Log("Setting fitness func to default...")
-	SetFitnessFunc(DefaultFitnessFunc)
+	genA.SetFitnessFunc(DefaultFitnessFunc)
 
 	expectedFitness := 4
-	gotFitness := Fitness(genome)
+	gotFitness := genA.Fitness(genome)
 
 	if gotFitness != expectedFitness {
 		t.Error("String is not correct fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
@@ -32,18 +28,15 @@ func TestGenome_DefaultFitness(t *testing.T) {
 }
 
 func TestGenome_CustomFitness(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genome := Genome{[]int{0, 0, 0, 1}}
 	t.Log(genome)
 	t.Log("Setting fitness func to custom...")
-	SetFitnessFunc(func(gene Genome) int {
+	genA.SetFitnessFunc(func(gene Genome) int {
 		count := 0
 		for _, i := range gene.Sequence {
 			if i == 0 {
@@ -54,7 +47,7 @@ func TestGenome_CustomFitness(t *testing.T) {
 	})
 
 	expectedFitness := 3
-	gotFitness := Fitness(genome)
+	gotFitness := genA.Fitness(genome)
 
 	if gotFitness != expectedFitness {
 		t.Error("String is not correct fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
@@ -64,16 +57,13 @@ func TestGenome_CustomFitness(t *testing.T) {
 }
 
 func TestAverageFitness(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	t.Log("Setting fitness func to default...")
-	SetFitnessFunc(DefaultFitnessFunc)
+	genA.SetFitnessFunc(DefaultFitnessFunc)
 
 	population := []Genome{
 		{[]int{1, 1, 1, 1}},
@@ -84,7 +74,7 @@ func TestAverageFitness(t *testing.T) {
 	t.Log("Created population:", population)
 
 	expectedFitness := 2
-	gotFitness := AverageFitness(population)
+	gotFitness := genA.AverageFitness(population)
 	if gotFitness != expectedFitness {
 		t.Error("Incorrect average fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	} else {
@@ -93,16 +83,13 @@ func TestAverageFitness(t *testing.T) {
 }
 
 func TestMaxFitness(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	t.Parallel()
+	rand.Seed(3)
+	var genA = NewGeneticAlgorithm()
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	t.Log("Setting fitness func to default...")
-	SetFitnessFunc(DefaultFitnessFunc)
+	genA.SetFitnessFunc(DefaultFitnessFunc)
 
 	population := []Genome{
 		{[]int{1, 1, 1, 1, 1, 1, 1, 1}},
@@ -113,7 +100,7 @@ func TestMaxFitness(t *testing.T) {
 	t.Log("Created population:", population)
 
 	expectedFitness := 8
-	gotFitness := MaxFitness(population)
+	gotFitness := genA.MaxFitness(population)
 	if gotFitness != expectedFitness {
 		t.Error("Incorrect max fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	} else {
@@ -121,7 +108,7 @@ func TestMaxFitness(t *testing.T) {
 	}
 
 	t.Log("Setting fitness func to custom...")
-	SetFitnessFunc(func(gene Genome) int {
+	genA.SetFitnessFunc(func(gene Genome) int {
 		count := 0
 		for _, i := range gene.Sequence {
 			if i == 0 {
@@ -140,7 +127,7 @@ func TestMaxFitness(t *testing.T) {
 	t.Log("Created population:", population)
 
 	expectedFitness = 8
-	gotFitness = MaxFitness(population)
+	gotFitness = genA.MaxFitness(population)
 	if gotFitness != expectedFitness {
 		t.Error("Incorrect max fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	} else {

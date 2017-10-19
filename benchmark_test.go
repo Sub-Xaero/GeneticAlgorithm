@@ -14,12 +14,7 @@ var (
 
 func benchmarkGATournament(length, generations int, terminateEarly bool, b *testing.B) {
 	rand.Seed(seed)
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(TournamentSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { b.Log(a...) })
+	var genA = NewGeneticAlgorithm()
 
 	var (
 		bestCandidate Genome
@@ -27,10 +22,10 @@ func benchmarkGATournament(length, generations int, terminateEarly bool, b *test
 		population    []Genome
 	)
 	for n := 0; n < b.N; n++ {
-		bestCandidate, numIterations, population = GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
-		b.Log("Best Candidate", bestCandidate)
-		b.Log("Num Iterations:", numIterations)
-		b.Log("Population:", population)
+		genA.Run(length, length, generations, true, true, terminateEarly)
+		b.Log("Best Candidate", genA.BestCandidate)
+		b.Log("Num Iterations:", genA.Generations)
+		b.Log("Population:", genA.Population)
 	}
 	globalBestCandidate = bestCandidate
 	globalNumIterations = numIterations
@@ -46,22 +41,17 @@ func BenchmarkGATournamentTerminateEarly_50(b *testing.B) { benchmarkGATournamen
 
 func benchmarkGARoulette(length, generations int, terminateEarly bool, b *testing.B) {
 	rand.Seed(seed)
-	SetMutateFunc(DefaultMutateFunc)
-	SetSelectionFunc(RouletteSelection)
-	SetFitnessFunc(DefaultFitnessFunc)
-	SetGenerateCandidate(DefaultGenerateCandidate)
-	SetCrossoverFunc(DefaultCrossoverFunc)
-	SetOutputFunc(func(a ...interface{}) { b.Log(a...) })
+	var genA = NewGeneticAlgorithm()
 	var (
 		bestCandidate Genome
 		numIterations int
 		population    []Genome
 	)
 	for n := 0; n < b.N; n++ {
-		bestCandidate, numIterations, population = GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
-		b.Log("Best Candidate", bestCandidate)
-		b.Log("Num Iterations:", numIterations)
-		b.Log("Population:", population)
+		genA.Run(length, length, generations, true, true, terminateEarly)
+		b.Log("Best Candidate", genA.BestCandidate)
+		b.Log("Num Iterations:", genA.Generations)
+		b.Log("Population:", genA.Population)
 	}
 	globalBestCandidate = bestCandidate
 	globalNumIterations = numIterations

@@ -4,7 +4,9 @@ import (
 	"math/rand"
 )
 
-var TournamentSelection func([]Genome) []Genome = func(population []Genome) []Genome {
+type SelectFunction func(FitnessFunction, []Genome) []Genome
+
+var TournamentSelection SelectFunction = func(Fitness FitnessFunction, population []Genome) []Genome {
 	offspring := make([]Genome, 0)
 
 	for i := 0; i < len(population); i++ {
@@ -21,7 +23,7 @@ var TournamentSelection func([]Genome) []Genome = func(population []Genome) []Ge
 	return offspring
 }
 
-var RouletteSelection func([]Genome) []Genome = func(population []Genome) []Genome {
+var RouletteSelection SelectFunction = func(Fitness FitnessFunction, population []Genome) []Genome {
 	offspring := make([]Genome, 0)
 	for range population {
 		weightSum := 0
@@ -40,14 +42,7 @@ var RouletteSelection func([]Genome) []Genome = func(population []Genome) []Geno
 	return offspring
 }
 
-var selectionFunc = TournamentSelection
-
 // SetSelectionFunc changes the selection function to the function specified
-func SetSelectionFunc(f func([]Genome) []Genome) {
-	selectionFunc = f
-}
-
-// Selection processes a population according to the function defined in SetSelectionFunc and returns an array of offspring
-func Selection(population []Genome) []Genome {
-	return selectionFunc(population)
+func (genA *GeneticAlgorithm) SetSelectionFunc(f SelectFunction) {
+	genA.Selection = f
 }
