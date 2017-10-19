@@ -14,6 +14,7 @@ func TestSetMutateFunc(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	SetMutateFunc(func(gene Genome) Genome {
 		return Genome{[]int{1, 2, 3, 4}}

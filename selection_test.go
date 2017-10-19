@@ -13,6 +13,7 @@ func TestSetSelectionFunc(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	SetSelectionFunc(func(genomes []Genome) []Genome {
 		offspring := make([]Genome, 0)
@@ -46,6 +47,7 @@ func TestTournament(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	population := []Genome{
 		{[]int{1, 1, 1, 1}},
@@ -71,6 +73,7 @@ func TestRoulette(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	population := []Genome{
 		{[]int{1, 1, 1, 1}},

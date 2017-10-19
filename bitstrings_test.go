@@ -14,6 +14,7 @@ func TestDefaultGenerateCandidate(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	expectedLength := 10
 	bitstring, err := GenerateCandidate(expectedLength)
@@ -50,6 +51,7 @@ func TestBadDefaultGenerateCandidate(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	expectedLength := 0
 	_, err := GenerateCandidate(expectedLength)
@@ -68,6 +70,7 @@ func TestCustomGenerateCandidate(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	SetGenerateCandidate(func(length int) ([]int, error) {
 		var sequence []int
@@ -108,6 +111,7 @@ func TestGenome_ToString(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	SetFitnessFunc(func(gene Genome) int {
 		count := 0

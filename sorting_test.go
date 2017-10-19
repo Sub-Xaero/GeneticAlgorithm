@@ -15,6 +15,7 @@ func TestSort(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	SetFitnessFunc(func(gene Genome) int {
 		count := 0

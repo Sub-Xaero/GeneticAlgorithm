@@ -85,7 +85,7 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 		breedingGround = append(breedingGround, Selection(population)...)
 		bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
 		UpdateBestCandidate(&bestCandidate, bestCandidateOfGeneration, &iterationsSinceChange)
-		fmt.Println("Tournament Offspring  :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
+		Output("Tournament Offspring  :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 
 		// Crossover
 		if crossover {
@@ -98,7 +98,7 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 			breedingGround = crossoverBreedingGround
 			bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
 			UpdateBestCandidate(&bestCandidate, bestCandidateOfGeneration, &iterationsSinceChange)
-			fmt.Println("Crossover Offspring   :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
+			Output("Crossover Offspring   :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		}
 
 		// Mutation
@@ -108,27 +108,27 @@ func GeneticAlgorithm(populationSize, bitstringLength, generations int, crossove
 			}
 			bestCandidateOfGeneration = MaxFitnessCandidate(breedingGround)
 			UpdateBestCandidate(&bestCandidate, bestCandidateOfGeneration, &iterationsSinceChange)
-			fmt.Println("Mutation Offspring    :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
+			Output("Mutation Offspring    :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		}
 
 		numGenerations++
 		iterationsSinceChange++
 		population = make([]Genome, populationSize)
 		copy(population, breedingGround)
-		fmt.Println("Final Population      :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
-		fmt.Println()
-		fmt.Println()
+		Output("Final Population      :", breedingGround, "Average:", AverageFitness(breedingGround), "Max:", MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
+		Output()
+		Output()
 
 		outputString := strings.Join([]string{strconv.Itoa(y), strconv.Itoa(AverageFitness(population)), strconv.Itoa(MaxFitness(population)), "\n"}, ",")
 		f.WriteString(outputString)
 
 		if terminateEarly && float32(iterationsSinceChange) > float32(generations)*0.25 {
-			fmt.Println("Termination : Stagnating change")
-			fmt.Println("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
+			Output("Termination : Stagnating change")
+			Output("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
 			return bestCandidate, numGenerations, population
 		}
 	}
 
-	fmt.Println("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
+	Output("Best Candidate Found:", bestCandidate.Sequence, "Fitness:", bestCandidate.Fitness())
 	return bestCandidate, numGenerations, population
 }

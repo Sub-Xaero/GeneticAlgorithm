@@ -25,6 +25,7 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	bestCandidate, numIterations, finalPopulation := GeneticAlgorithm(length, length, generations, true, true, terminateEarly)
 	fmt.Println(bestCandidate, finalPopulation)
@@ -72,6 +73,7 @@ func TestFillRandomPopulation(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	expectedLen := 10
 	population := make([]Genome, 0)

@@ -19,6 +19,8 @@ func benchmarkGATournament(length, generations int, terminateEarly bool, b *test
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { b.Log(a...) })
+
 	var (
 		bestCandidate Genome
 		numIterations int
@@ -49,6 +51,7 @@ func benchmarkGARoulette(length, generations int, terminateEarly bool, b *testin
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { b.Log(a...) })
 	var (
 		bestCandidate Genome
 		numIterations int

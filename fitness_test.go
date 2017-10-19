@@ -13,6 +13,7 @@ func TestGenome_DefaultFitness(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genome := Genome{[]int{1, 1, 1, 1}}
 
@@ -37,6 +38,7 @@ func TestGenome_CustomFitness(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genome := Genome{[]int{0, 0, 0, 1}}
 	t.Log(genome)
@@ -68,6 +70,7 @@ func TestAverageFitness(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	t.Log("Setting fitness func to default...")
 	SetFitnessFunc(DefaultFitnessFunc)
@@ -96,6 +99,7 @@ func TestMaxFitness(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	t.Log("Setting fitness func to default...")
 	SetFitnessFunc(DefaultFitnessFunc)

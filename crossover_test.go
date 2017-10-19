@@ -14,6 +14,7 @@ func TestDefaultCrossover(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	population := []Genome{
 		{[]int{1, 0, 0, 0}},
@@ -52,6 +53,7 @@ func TestBadDefaultCrossover(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	population := []Genome{
 		{[]int{1, 0, 0, 0}},
@@ -72,6 +74,7 @@ func TestSetCrossoverFunc(t *testing.T) {
 	SetFitnessFunc(DefaultFitnessFunc)
 	SetGenerateCandidate(DefaultGenerateCandidate)
 	SetCrossoverFunc(DefaultCrossoverFunc)
+	SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	SetCrossoverFunc(func(gene, spouse Genome) ([]Genome, error) {
 		return []Genome{{[]int{1, 2, 3, 4}}}, nil
