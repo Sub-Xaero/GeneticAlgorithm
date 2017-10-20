@@ -20,10 +20,10 @@ func TestSetSelectionFunc(t *testing.T) {
 	})
 
 	genA.Population = []Genome{
-		{[]int{1, 1, 1, 1}},
-		{[]int{0, 1, 1, 1}},
-		{[]int{0, 0, 1, 1}},
-		{[]int{0, 0, 0, 1}},
+		{bitstring{"1", "1", "1", "1"}},
+		{bitstring{"0", "1", "1", "1"}},
+		{bitstring{"0", "0", "1", "1"}},
+		{bitstring{"0", "0", "0", "1"}},
 	}
 	genA.Population = genA.Selection(genA.Fitness, genA.Population)
 
@@ -43,10 +43,10 @@ func TestTournament(t *testing.T) {
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genA.Population = []Genome{
-		{[]int{1, 1, 1, 1}},
-		{[]int{0, 1, 1, 1}},
-		{[]int{0, 0, 1, 1}},
-		{[]int{0, 0, 0, 1}},
+		{bitstring{"1", "1", "1", "1"}},
+		{bitstring{"0", "1", "1", "1"}},
+		{bitstring{"0", "0", "1", "1"}},
+		{bitstring{"0", "0", "0", "1"}},
 	}
 	avgFitnessBefore := genA.AverageFitness(genA.Population)
 	genA.Population = genA.Selection(genA.Fitness, genA.Population)
@@ -66,10 +66,10 @@ func TestRoulette(t *testing.T) {
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genA.Population = []Genome{
-		{[]int{1, 1, 1, 1}},
-		{[]int{0, 1, 1, 1}},
-		{[]int{0, 0, 1, 1}},
-		{[]int{0, 0, 0, 1}},
+		{bitstring{"1", "1", "1", "1"}},
+		{bitstring{"0", "1", "1", "1"}},
+		{bitstring{"0", "0", "1", "1"}},
+		{bitstring{"0", "0", "0", "1"}},
 	}
 	avgFitnessBefore := genA.AverageFitness(genA.Population)
 	genA.Population = genA.Selection(genA.Fitness, genA.Population)

@@ -4,16 +4,13 @@ import (
 	"bufio"
 	"math/rand"
 	"os"
-	"strconv"
 	"testing"
-	"time"
 )
 
 var InputRuleBase []Rule
 
 func TestRuleGA(t *testing.T) {
-	//rand.Seed(3)
-	rand.Seed(time.Now().Unix())
+	rand.Seed(3)
 	var geneticAlgorithm = NewGeneticAlgorithm()
 	geneticAlgorithm.SetOutputFunc(func(a ...interface{}) { t.Log(a) })
 
@@ -31,22 +28,22 @@ func TestRuleGA(t *testing.T) {
 			continue
 		}
 		text := scanner.Text()
-		ruleSequence := make([]int, 0)
+		ruleSequence := make(bitstring, 0)
 		for char := 0; char < 5; char++ {
-			num, err := strconv.Atoi(string(text[char]))
+			num := string(text[char])
 			check(err)
-			ruleSequence = append(ruleSequence, int(num))
+			ruleSequence = append(ruleSequence, num)
 		}
-		output, err := strconv.Atoi(string(text[6]))
+		output := string(text[6])
 		check(err)
-		InputRuleBase = append(InputRuleBase, Rule{ruleSequence, int(output)})
+		InputRuleBase = append(InputRuleBase, Rule{ruleSequence, output})
 	}
 
 	geneticAlgorithm.SetFitnessFunc(func(gene Genome) int {
 		NewRuleBase := make([]Rule, 0)
 		fitnessValue := 0
 		for i := 0; i < len(gene.Sequence)-6-1; i += 6 {
-			condition := make([]int, len(gene.Sequence[i:i+5]))
+			condition := make(bitstring, len(gene.Sequence[i:i+5]))
 			copy(condition, gene.Sequence[i:i+5])
 			rule := Rule{condition, gene.Sequence[i+5]}
 			NewRuleBase = append(NewRuleBase, rule)

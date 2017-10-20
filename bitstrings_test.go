@@ -3,6 +3,7 @@ package ga
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"testing"
 )
 
@@ -31,7 +32,9 @@ func TestDefaultGenerateCandidate(t *testing.T) {
 	expectedSum := 20
 	sum := 0
 	for _, i := range bitstring {
-		sum += i
+		val, err := strconv.Atoi(string(i))
+		check(err)
+		sum += val
 	}
 	if sum >= 20 {
 		t.Error("String is not correct value.", "Expected:", expectedSum, "Got:", sum)
@@ -62,16 +65,16 @@ func TestCustomGenerateCandidate(t *testing.T) {
 	var genA = NewGeneticAlgorithm()
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	genA.SetGenerateCandidate(func(length int) ([]int, error) {
-		var sequence []int
+	genA.SetGenerateCandidate(func(length int) (bitstring, error) {
+		var sequence bitstring
 		for i := 1; i <= length; i++ {
-			sequence = append(sequence, i)
+			sequence = append(sequence, strconv.Itoa(i))
 		}
 		return sequence, nil
 	})
 
 	expectedLength := 9
-	bitstring, err := genA.GenerateCandidate(expectedLength)
+	sequence, err := genA.GenerateCandidate(expectedLength)
 
 	if err == nil {
 		t.Log("Successfully generated candidate")
@@ -79,7 +82,7 @@ func TestCustomGenerateCandidate(t *testing.T) {
 		t.Error("Unexpected error:", err)
 	}
 
-	length := len(bitstring)
+	length := len(sequence)
 	if length != expectedLength {
 		t.Error("String is not correct length.", "Expected:", expectedLength, "Got:", length)
 	} else {
@@ -87,50 +90,9 @@ func TestCustomGenerateCandidate(t *testing.T) {
 	}
 
 	expected := "[1 2 3 4 5 6 7 8 9]"
-	if fmt.Sprint(bitstring) != expected {
-		t.Error("String is not correct string.", "Expected:", expected, "Got:", bitstring)
+	if fmt.Sprint(sequence) != expected {
+		t.Error("String is not correct string.", "Expected:", expected, "Got:", sequence)
 	} else {
-		t.Log("String is correct string.", "Expected:", expected, "Got:", bitstring)
-	}
-}
-
-func TestGenome_ToString(t *testing.T) {
-	t.Parallel()
-	rand.Seed(3)
-	var genA = NewGeneticAlgorithm()
-	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
-
-	genA.SetFitnessFunc(func(gene Genome) int {
-		count := 0
-		for _, i := range gene.Sequence {
-			if i == 1 {
-				count++
-			}
-		}
-		return count
-	})
-
-	outputString := Genome{[]int{1, 1, 1, 1}}.String()
-	expected := "{[1 1 1 1]}"
-	if outputString != expected {
-		t.Error("Incorrect string:", outputString, "Expected:", expected)
-	}
-
-	outputString = Genome{[]int{1, 0, 1, 0, 1, 0, 1, 0, 1, 0}}.String()
-	expected = "{[1 0 1 0 1 0 1 0 1 0]}"
-	if outputString != expected {
-		t.Error("Incorrect string:", outputString, "Expected:", expected)
-	}
-
-	outputString = Genome{[]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}}.String()
-	expected = "{[1 1 1 1 1 1 1 1 1 1]}"
-	if outputString != expected {
-		t.Error("Incorrect string:", outputString, "Expected:", expected)
-	}
-
-	outputString = Genome{[]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}}.String()
-	expected = "{[1 1 1 1 1 1 1 1 1 1 1 1]}"
-	if outputString != expected {
-		t.Error("Incorrect string:", outputString, "Expected:", expected)
+		t.Log("String is correct string.", "Expected:", expected, "Got:", sequence)
 	}
 }

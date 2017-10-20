@@ -13,10 +13,10 @@ func TestSetMutateFunc(t *testing.T) {
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genA.SetMutateFunc(func(gene Genome) Genome {
-		return Genome{[]int{1, 2, 3, 4}}
+		return Genome{bitstring{"1", "2", "3", "4"}}
 	})
 
-	output := fmt.Sprint(genA.Mutate(Genome{[]int{}}))
+	output := fmt.Sprint(genA.Mutate(Genome{bitstring{}}))
 	expectedOutput := "{[1 2 3 4]}"
 	if output != expectedOutput {
 		t.Error("Mutate function not set. Expected:", expectedOutput, "Got:", output)

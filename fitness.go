@@ -5,7 +5,7 @@ type FitnessFunction func(gene Genome) int
 var DefaultFitnessFunc FitnessFunction = func(gene Genome) int {
 	count := 0
 	for _, i := range gene.Sequence {
-		if i == 1 {
+		if i == "1" {
 			count++
 		}
 	}

@@ -4,11 +4,11 @@ import "fmt"
 
 // Genome represents a bitstring and associated fitness value
 type Genome struct {
-	Sequence []int
+	Sequence bitstring
 }
 
 func (gene Genome) Copy() Genome {
-	sequence := make([]int, len(gene.Sequence))
+	sequence := make(bitstring, len(gene.Sequence))
 	copy(sequence, gene.Sequence)
 	return Genome{sequence}
 }

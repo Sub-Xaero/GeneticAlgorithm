@@ -28,6 +28,17 @@ type GeneticAlgorithm struct {
 	Output            func(a ...interface{})
 }
 
+//func (genA GeneticAlgorithm) String () string {
+//outputString := ""
+//length := len(genA)
+//
+//if length
+//for i, gene := range genA.Population {
+//	outputString
+//}
+//
+//}
+
 func NewGeneticAlgorithm() GeneticAlgorithm {
 	var geneticAlgorithm GeneticAlgorithm
 	geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)

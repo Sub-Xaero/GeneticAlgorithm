@@ -12,8 +12,8 @@ func TestDefaultCrossover(t *testing.T) {
 	var genA = NewGeneticAlgorithm()
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 	population := []Genome{
-		{[]int{1, 0, 0, 0}},
-		{[]int{0, 0, 0, 1}},
+		{bitstring{"1", "0", "0", "0"}},
+		{bitstring{"0", "0", "0", "1"}},
 	}
 	offspring, err := genA.Crossover(population[0], population[1])
 
@@ -48,8 +48,8 @@ func TestBadDefaultCrossover(t *testing.T) {
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	population := []Genome{
-		{[]int{1, 0, 0, 0}},
-		{[]int{0, 0, 0}},
+		{bitstring{"1", "0", "0", "0"}},
+		{bitstring{"0", "0", "0"}},
 	}
 	_, err := genA.Crossover(population[0], population[1])
 	if err == nil {
@@ -66,11 +66,11 @@ func TestSetCrossoverFunc(t *testing.T) {
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genA.SetCrossoverFunc(func(gene, spouse Genome) ([]Genome, error) {
-		return []Genome{{[]int{1, 2, 3, 4}}}, nil
+		return []Genome{{bitstring{"1", "2", "3", "4"}}}, nil
 	})
 
 	expectedString := "[{[1 2 3 4]}]"
-	crossoverGene, err := genA.Crossover(Genome{[]int{}}, Genome{[]int{}})
+	crossoverGene, err := genA.Crossover(Genome{bitstring{}}, Genome{bitstring{}})
 
 	if err != nil {
 		t.Error("Unexpected error:", err)

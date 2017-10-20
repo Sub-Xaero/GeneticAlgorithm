@@ -3,8 +3,8 @@ package ga
 import "fmt"
 
 type Rule struct {
-	condition []int
-	output    int
+	condition bitstring
+	output    string
 }
 
 func (rule1 Rule) Matches(rule2 Rule) bool {
@@ -13,7 +13,7 @@ func (rule1 Rule) Matches(rule2 Rule) bool {
 	}
 	conditionMatches := true
 	for i := range rule1.condition {
-		if rule1.condition[i] == 2 || rule2.condition[i] == 2 {
+		if rule1.condition[i] == "2" || rule2.condition[i] == "2" {
 			continue
 		} else if rule1.condition[i] != rule2.condition[i] {
 			conditionMatches = false

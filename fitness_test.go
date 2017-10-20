@@ -11,7 +11,7 @@ func TestGenome_DefaultFitness(t *testing.T) {
 	var genA = NewGeneticAlgorithm()
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	genome := Genome{[]int{1, 1, 1, 1}}
+	genome := Genome{bitstring{"1", "1", "1", "1"}}
 
 	t.Log("Genome:", genome)
 	t.Log("Setting fitness func to default...")
@@ -33,13 +33,13 @@ func TestGenome_CustomFitness(t *testing.T) {
 	var genA = NewGeneticAlgorithm()
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	genome := Genome{[]int{0, 0, 0, 1}}
+	genome := Genome{bitstring{"0", "0", "0", "1"}}
 	t.Log(genome)
 	t.Log("Setting fitness func to custom...")
 	genA.SetFitnessFunc(func(gene Genome) int {
 		count := 0
 		for _, i := range gene.Sequence {
-			if i == 0 {
+			if i == "0" {
 				count++
 			}
 		}
@@ -66,10 +66,10 @@ func TestAverageFitness(t *testing.T) {
 	genA.SetFitnessFunc(DefaultFitnessFunc)
 
 	population := []Genome{
-		{[]int{1, 1, 1, 1}},
-		{[]int{1, 1, 1, 1}},
-		{[]int{0, 0, 0, 0}},
-		{[]int{0, 0, 0, 0}},
+		{bitstring{"1", "1", "1", "1"}},
+		{bitstring{"1", "1", "1", "1"}},
+		{bitstring{"0", "0", "0", "0"}},
+		{bitstring{"0", "0", "0", "0"}},
 	}
 	t.Log("Created population:", population)
 
@@ -92,10 +92,10 @@ func TestMaxFitness(t *testing.T) {
 	genA.SetFitnessFunc(DefaultFitnessFunc)
 
 	population := []Genome{
-		{[]int{1, 1, 1, 1, 1, 1, 1, 1}},
-		{[]int{1, 1, 1, 1, 1, 1, 1, 1}},
-		{[]int{0, 0, 0, 0, 0, 0, 0, 0}},
-		{[]int{0, 0, 0, 0, 0, 0, 0, 0}},
+		{bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
+		{bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
+		{bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
+		{bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
 	}
 	t.Log("Created population:", population)
 
@@ -111,7 +111,7 @@ func TestMaxFitness(t *testing.T) {
 	genA.SetFitnessFunc(func(gene Genome) int {
 		count := 0
 		for _, i := range gene.Sequence {
-			if i == 0 {
+			if i == "0" {
 				count++
 			}
 		}
@@ -119,10 +119,10 @@ func TestMaxFitness(t *testing.T) {
 	})
 
 	population = []Genome{
-		{[]int{1, 1, 1, 1, 1, 1, 1, 1}},
-		{[]int{0, 0, 0, 0, 1, 1, 1, 1}},
-		{[]int{0, 0, 0, 0, 0, 0, 0, 0}},
-		{[]int{0, 0, 0, 0, 0, 0, 0, 0}},
+		{bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
+		{bitstring{"0", "0", "0", "0", "1", "1", "1", "1"}},
+		{bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
+		{bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
 	}
 	t.Log("Created population:", population)
 
