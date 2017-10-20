@@ -56,25 +56,25 @@ func (genA *GeneticAlgorithm) FillRandomPopulation(populationSize, candidateLeng
 	return population
 }
 
-func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations int, crossover, mutate, terminateEarly bool) {
+func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations int, crossover, mutate, terminateEarly bool) error {
 
 	if genA.GenerateCandidate == nil {
-		panic(errors.New("generate func candidate is null"))
+		return errors.New("generate func candidate is nil")
 	}
 	if genA.Crossover == nil {
-		panic(errors.New("crossover func is null"))
+		return errors.New("crossover func is nil")
 	}
 	if genA.Mutate == nil {
-		panic(errors.New("mutate func is null"))
+		return errors.New("mutate func is nil")
 	}
 	if genA.Fitness == nil {
-		panic(errors.New("fitness func is null"))
+		return errors.New("fitness func is nil")
 	}
 	if genA.Selection == nil {
-		panic(errors.New("selection func is null"))
+		return errors.New("selection func is nil")
 	}
 	if genA.Output == nil {
-		panic(errors.New("output func is null"))
+		return errors.New("output func is nil")
 	}
 
 	// Open output file, to save results to
@@ -155,4 +155,5 @@ func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations i
 	}
 
 	genA.Output("Best Candidate Found:", genA.BestCandidate.Sequence, "Fitness:", genA.Fitness(genA.BestCandidate))
+	return nil
 }
