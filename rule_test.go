@@ -63,7 +63,9 @@ func TestRuleGA(t *testing.T) {
 		}
 		for _, InputRule := range InputRuleBase {
 			for _, GeneratedRule := range NewRuleBase {
-				if InputRule.Matches(GeneratedRule) {
+				matches, err := InputRule.Matches(GeneratedRule)
+				check(err)
+				if matches {
 					fitnessValue++
 					break
 				}
