@@ -2,12 +2,35 @@ package ga
 
 import (
 	"testing"
+	"errors"
 )
 
 const (
 	ROULETTE   = iota
 	TOURNAMENT = iota
 )
+
+func TestCheck_BadError(t *testing.T) {
+	err := errors.New("horrible error")
+	defer func () {
+		if r := recover(); r != nil {
+			t.Log("Panic successfully thrown on bad error")
+		} else {
+			t.Error("Panic either not thrown, or could not recover. ")
+		}
+	}()
+	check(err)
+
+}
+
+func TestCheck_NilError(t *testing.T) {
+	check(nil)
+	if r := recover(); r == nil {
+		t.Log("Panic correctly not thrown on nil error")
+	} else {
+		t.Error("Panic was thrown for a nil error")
+	}
+}
 
 func TestFillRandomPopulation(t *testing.T) {
 	t.Parallel()
