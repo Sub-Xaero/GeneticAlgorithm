@@ -90,6 +90,24 @@ func TestRule_NotMatchesMultipleWildcard(t *testing.T) {
 	}
 }
 
+func TestRule_Matches(t *testing.T) {
+	t.Parallel()
+	rule1 := Rule{bitstring{"1", "0"}, "1"}
+	rule2 := Rule{bitstring{"1", "0"}, "1"}
+	got, err := rule1.Matches(rule2)
+	if err != nil {
+		t.Error("Did not expect error, error thrown.", err)
+	} else {
+		t.Log("No errors thrown, Rules match length")
+	}
+
+	if true != got {
+		t.Error("Rules do not match, expected to match.", rule1, "!=", rule2, "=", got)
+	} else {
+		t.Log("Rules match, expected to match.", rule1, "!=", rule2, "=", got)
+	}
+}
+
 func TestRuleGA(t *testing.T) {
 	rand.Seed(3)
 	var geneticAlgorithm = NewGeneticAlgorithm()
