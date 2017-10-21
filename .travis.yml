@@ -4,3 +4,6 @@ go:
   - 1.7.x
 
 script: go test ./...
+
+notifications:
+  slack: ephyrasoftware:exil5Dp0YYJiK7hheDY83VVF
