@@ -22,6 +22,23 @@ func TestRule_String(t *testing.T) {
 	}
 }
 
+func TestRule_Matches_BadLength(t *testing.T) {
+	t.Parallel()
+	rule1 := Rule{bitstring{"1", "0", "0"}, "0"}
+	rule2 := Rule{bitstring{"1", "0"}, "1"}
+	got, err := rule1.Matches(rule2)
+	if err == nil {
+		t.Error("Expected error, strings are not same length. No error thrown.")
+	} else {
+		t.Log("Expected error, got error")
+	}
+	if false != got {
+		t.Error("Rules match, expected not to match.", rule1, "!=", rule2, "=", got)
+	} else {
+		t.Log("Rules do not match, expected not to match.", rule1, "!=", rule2, "=", got)
+	}
+}
+
 func TestRuleGA(t *testing.T) {
 	rand.Seed(3)
 	var geneticAlgorithm = NewGeneticAlgorithm()
