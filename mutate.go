@@ -7,6 +7,7 @@ import (
 type MutateFunction func(Genome) Genome
 
 var DefaultMutateFunc MutateFunction = func(gene Genome) Genome {
+	gene = gene.Copy()
 	choice := rand.Int() % len(gene.Sequence)
 	if gene.Sequence[choice] == "1" {
 		gene.Sequence[choice] = "0"
