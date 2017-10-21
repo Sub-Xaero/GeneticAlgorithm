@@ -196,6 +196,36 @@ func TestRuleGA(t *testing.T) {
 		return fitnessValue
 	})
 
+	geneticAlgorithm.SetMutateFunc(func(gene Genome, random *rand.Rand) Genome {
+		choice := random.Int() % len(gene.Sequence)
+		choice2 := random.Int() % 2
+
+		switch gene.Sequence[choice] {
+		case "0":
+			switch choice2 {
+			case 0:
+				gene.Sequence[choice] = "1"
+			case 1:
+				gene.Sequence[choice] = "#"
+			}
+		case "1":
+			switch choice2 {
+			case 0:
+				gene.Sequence[choice] = "0"
+			case 1:
+				gene.Sequence[choice] = "#"
+			}
+		case "#":
+			switch choice2 {
+			case 0:
+				gene.Sequence[choice] = "0"
+			case 1:
+				gene.Sequence[choice] = "1"
+			}
+		}
+		return gene
+	})
+
 	geneticAlgorithm.Run(10, 60, 10, true, true, false)
 	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Population)
 
