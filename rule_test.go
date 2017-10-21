@@ -145,8 +145,8 @@ func TestRule_MatchesMultipleWildcards(t *testing.T) {
 }
 
 func TestRuleGA(t *testing.T) {
-	rand.Seed(3)
 	var geneticAlgorithm = NewGeneticAlgorithm()
+	geneticAlgorithm.SetSeed(3)
 	geneticAlgorithm.SetOutputFunc(func(a ...interface{}) { t.Log(a) })
 
 	InputRuleBase = make([]Rule, 0)
