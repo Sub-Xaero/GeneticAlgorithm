@@ -6,6 +6,7 @@ import (
 )
 
 func TestSetOutputFunc(t *testing.T) {
+	t.Parallel()
 	var genA GeneticAlgorithm
 	var gotOutput string
 	output := func (s string) {
