@@ -1,17 +1,17 @@
 package ga
 
 import (
-	"math/rand"
 	"testing"
+	"math/rand"
 )
 
 func TestSetSelectionFunc(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	genA.SetSelectionFunc(func(Fitness FitnessFunction, genomes []Genome) []Genome {
+	genA.SetSelectionFunc(func(Fitness FitnessFunction, genomes []Genome, random *rand.Rand) []Genome {
 		offspring := make([]Genome, 0)
 		for range genomes {
 			offspring = append(offspring, genomes[0].Copy())
@@ -25,7 +25,7 @@ func TestSetSelectionFunc(t *testing.T) {
 		{bitstring{"0", "0", "1", "1"}},
 		{bitstring{"0", "0", "0", "1"}},
 	}
-	genA.Population = genA.Selection(genA.Fitness, genA.Population)
+	genA.Population = genA.Selection(genA.Fitness, genA.Population, genA.RandomEngine)
 
 	expectedFitness := 4
 	gotFitness := genA.AverageFitness(genA.Population)
@@ -38,8 +38,8 @@ func TestSetSelectionFunc(t *testing.T) {
 
 func TestTournament(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genA.Population = []Genome{
@@ -49,7 +49,7 @@ func TestTournament(t *testing.T) {
 		{bitstring{"0", "0", "0", "1"}},
 	}
 	avgFitnessBefore := genA.AverageFitness(genA.Population)
-	genA.Population = genA.Selection(genA.Fitness, genA.Population)
+	genA.Population = genA.Selection(genA.Fitness, genA.Population, genA.RandomEngine)
 	avgFitnessAfter := genA.AverageFitness(genA.Population)
 
 	if avgFitnessAfter < avgFitnessBefore {
@@ -61,8 +61,8 @@ func TestTournament(t *testing.T) {
 
 func TestRoulette(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genA.Population = []Genome{
@@ -72,7 +72,7 @@ func TestRoulette(t *testing.T) {
 		{bitstring{"0", "0", "0", "1"}},
 	}
 	avgFitnessBefore := genA.AverageFitness(genA.Population)
-	genA.Population = genA.Selection(genA.Fitness, genA.Population)
+	genA.Population = genA.Selection(genA.Fitness, genA.Population, genA.RandomEngine)
 	avgFitnessAfter := genA.AverageFitness(genA.Population)
 
 	if avgFitnessAfter < avgFitnessBefore {

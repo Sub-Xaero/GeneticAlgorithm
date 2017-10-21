@@ -1,7 +1,6 @@
 package ga
 
 import (
-	"math/rand"
 	"testing"
 )
 
@@ -13,8 +12,8 @@ var (
 )
 
 func benchmarkGATournament(length, generations int, terminateEarly bool, b *testing.B) {
-	rand.Seed(seed)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(seed)
 
 	var (
 		bestCandidate Genome
@@ -40,8 +39,8 @@ func BenchmarkGATournamentTerminateEarly_20(b *testing.B) { benchmarkGATournamen
 func BenchmarkGATournamentTerminateEarly_50(b *testing.B) { benchmarkGATournament(50, 500, true, b) }
 
 func benchmarkGARoulette(length, generations int, terminateEarly bool, b *testing.B) {
-	rand.Seed(seed)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(seed)
 	var (
 		bestCandidate Genome
 		numIterations int

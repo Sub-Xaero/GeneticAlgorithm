@@ -9,12 +9,12 @@ import (
 
 func TestDefaultGenerateCandidate(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	expectedLength := 10
-	bitstring, err := genA.GenerateCandidate(expectedLength)
+	bitstring, err := genA.GenerateCandidate(expectedLength, genA.RandomEngine)
 
 	if err == nil {
 		t.Log("Successfully generated candidate")
@@ -45,12 +45,12 @@ func TestDefaultGenerateCandidate(t *testing.T) {
 
 func TestBadDefaultGenerateCandidate(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	expectedLength := 0
-	_, err := genA.GenerateCandidate(expectedLength)
+	_, err := genA.GenerateCandidate(expectedLength, genA.RandomEngine)
 
 	if err == nil {
 		t.Error("Bad candidate length did not throw error as it should. Err:", err)
@@ -61,11 +61,11 @@ func TestBadDefaultGenerateCandidate(t *testing.T) {
 
 func TestCustomGenerateCandidate(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	genA.SetGenerateCandidate(func(length int) (bitstring, error) {
+	genA.SetGenerateCandidate(func(length int, random *rand.Rand) (bitstring, error) {
 		var sequence bitstring
 		for i := 1; i <= length; i++ {
 			sequence = append(sequence, strconv.Itoa(i))
@@ -74,7 +74,7 @@ func TestCustomGenerateCandidate(t *testing.T) {
 	})
 
 	expectedLength := 9
-	sequence, err := genA.GenerateCandidate(expectedLength)
+	sequence, err := genA.GenerateCandidate(expectedLength, genA.RandomEngine)
 
 	if err == nil {
 		t.Log("Successfully generated candidate")

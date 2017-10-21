@@ -4,14 +4,14 @@ import (
 	"math/rand"
 )
 
-type SelectFunction func(FitnessFunction, []Genome) []Genome
+type SelectFunction func(FitnessFunction, []Genome, *rand.Rand) []Genome
 
-var TournamentSelection SelectFunction = func(Fitness FitnessFunction, population []Genome) []Genome {
+var TournamentSelection SelectFunction = func(Fitness FitnessFunction, population []Genome, random *rand.Rand) []Genome {
 	offspring := make([]Genome, 0)
 
 	for i := 0; i < len(population); i++ {
-		parent1 := population[rand.Int()%len(population)]
-		parent2 := population[rand.Int()%len(population)]
+		parent1 := population[random.Int()%len(population)]
+		parent2 := population[random.Int()%len(population)]
 
 		if Fitness(parent1) > Fitness(parent2) {
 			offspring = append(offspring, parent1)
@@ -23,14 +23,14 @@ var TournamentSelection SelectFunction = func(Fitness FitnessFunction, populatio
 	return offspring
 }
 
-var RouletteSelection SelectFunction = func(Fitness FitnessFunction, population []Genome) []Genome {
+var RouletteSelection SelectFunction = func(Fitness FitnessFunction, population []Genome, random *rand.Rand) []Genome {
 	offspring := make([]Genome, 0)
 	for range population {
 		weightSum := 0
 		for _, val := range population {
 			weightSum += Fitness(val)
 		}
-		choice := rand.Float32() * float32(weightSum)
+		choice := random.Float32() * float32(weightSum)
 		for _, val := range population {
 			choice -= float32(Fitness(val))
 			if choice <= 0 {

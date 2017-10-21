@@ -1,7 +1,6 @@
 package ga
 
 import (
-	"math/rand"
 	"testing"
 )
 
@@ -10,11 +9,10 @@ const (
 	TOURNAMENT = iota
 )
 
-
 func TestFillRandomPopulation(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var geneticAlgorithm = NewGeneticAlgorithm()
+	geneticAlgorithm.SetSeed(3)
 	geneticAlgorithm.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	expectedLen := 10
@@ -46,6 +44,8 @@ func TestGA_NilGenerateCandidateFunc(t *testing.T) {
 	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
 	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 	geneticAlgorithm.SetOutputFunc(PrintToConsole)
+	geneticAlgorithm.SetOutputFunc(PrintToConsole)
+	geneticAlgorithm.SetSeed(3)
 	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
 
 	if err == nil {
@@ -63,6 +63,7 @@ func TestGA_NilCrossoverFunc(t *testing.T) {
 	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
 	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 	geneticAlgorithm.SetOutputFunc(PrintToConsole)
+	geneticAlgorithm.SetSeed(3)
 	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
 
 	if err == nil {
@@ -80,6 +81,7 @@ func TestGA_NilMutateFunc(t *testing.T) {
 	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
 	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 	geneticAlgorithm.SetOutputFunc(PrintToConsole)
+	geneticAlgorithm.SetSeed(3)
 	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
 
 	if err == nil {
@@ -97,6 +99,7 @@ func TestGA_NilFitnessFunc(t *testing.T) {
 	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
 	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 	geneticAlgorithm.SetOutputFunc(PrintToConsole)
+	geneticAlgorithm.SetSeed(3)
 	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
 
 	if err == nil {
@@ -114,6 +117,7 @@ func TestGA_NilSelectionFunc(t *testing.T) {
 	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
 	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
 	geneticAlgorithm.SetOutputFunc(PrintToConsole)
+	geneticAlgorithm.SetSeed(3)
 	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
 
 	if err == nil {
@@ -131,6 +135,25 @@ func TestGA_NilOutputFunc(t *testing.T) {
 	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
 	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
 	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+	geneticAlgorithm.SetSeed(3)
+	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
+
+	if err == nil {
+		t.Error("GA did not error as expected. Got:", err)
+	} else {
+		t.Log("GA errored as expected. Got:", err)
+	}
+}
+
+func TestGA_NilRandom(t *testing.T) {
+	t.Parallel()
+	var geneticAlgorithm GeneticAlgorithm
+	geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+	geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+	geneticAlgorithm.SetOutputFunc(PrintToConsole)
 	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
 
 	if err == nil {
@@ -145,7 +168,6 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 	if testing.Short() {
 		t.Skip()
 	}
-	rand.Seed(3)
 	var geneticAlgorithm = NewGeneticAlgorithm()
 
 	switch selectionMethod {

@@ -2,13 +2,12 @@ package ga
 
 import (
 	"testing"
-	"math/rand"
 )
 
 func TestGenome_ToString(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genA.SetFitnessFunc(func(gene Genome) int {

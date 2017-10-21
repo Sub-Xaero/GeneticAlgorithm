@@ -4,11 +4,11 @@ import (
 	"math/rand"
 )
 
-type MutateFunction func(Genome) Genome
+type MutateFunction func(Genome, *rand.Rand) Genome
 
-var DefaultMutateFunc MutateFunction = func(gene Genome) Genome {
+var DefaultMutateFunc MutateFunction = func(gene Genome, random *rand.Rand) Genome {
 	gene = gene.Copy()
-	choice := rand.Int() % len(gene.Sequence)
+	choice := random.Int() % len(gene.Sequence)
 	if gene.Sequence[choice] == "1" {
 		gene.Sequence[choice] = "0"
 	} else {

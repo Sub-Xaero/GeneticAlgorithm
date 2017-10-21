@@ -1,14 +1,13 @@
 package ga
 
 import (
-	"math/rand"
 	"testing"
 )
 
 func TestGenome_DefaultFitness(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genome := Genome{bitstring{"1", "1", "1", "1"}}
@@ -29,8 +28,8 @@ func TestGenome_DefaultFitness(t *testing.T) {
 
 func TestGenome_CustomFitness(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genome := Genome{bitstring{"0", "0", "0", "1"}}
@@ -58,8 +57,8 @@ func TestGenome_CustomFitness(t *testing.T) {
 
 func TestAverageFitness(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	t.Log("Setting fitness func to default...")
@@ -84,8 +83,8 @@ func TestAverageFitness(t *testing.T) {
 
 func TestMaxFitness(t *testing.T) {
 	t.Parallel()
-	rand.Seed(3)
 	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	t.Log("Setting fitness func to default...")
