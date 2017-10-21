@@ -5,11 +5,18 @@ import (
 	"fmt"
 )
 
+func TestDefaultOutputFunc(t *testing.T) {
+	t.Parallel()
+	var genA = NewGeneticAlgorithm()
+	genA.Output("Test")
+	t.Log("Didn't panic. Assume success. No other way to test.")
+}
+
 func TestSetOutputFunc(t *testing.T) {
 	t.Parallel()
 	var genA GeneticAlgorithm
 	var gotOutput string
-	output := func (s string) {
+	output := func(s string) {
 		gotOutput = s
 	}
 
