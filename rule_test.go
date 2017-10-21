@@ -9,6 +9,19 @@ import (
 
 var InputRuleBase []Rule
 
+func TestRule_String(t *testing.T) {
+	t.Parallel()
+	rule1 := Rule{bitstring{"1", "0"}, "0"}
+
+	expected := "[1 0] 0"
+	got := rule1.String()
+	if expected != got {
+		t.Error("Rule.toString does not match expected. Expected:", expected, "Got:", got)
+	} else {
+		t.Log("Rule.toString matches expected. Expected:", expected, "Got:", got)
+	}
+}
+
 func TestRuleGA(t *testing.T) {
 	rand.Seed(3)
 	var geneticAlgorithm = NewGeneticAlgorithm()
