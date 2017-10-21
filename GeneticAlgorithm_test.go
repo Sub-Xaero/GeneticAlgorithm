@@ -177,6 +177,7 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 		geneticAlgorithm.SetSelectionFunc(RouletteSelection)
 	}
 	geneticAlgorithm.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+	geneticAlgorithm.SetSeed(3)
 
 	geneticAlgorithm.Run(length, length, generations, true, true, terminateEarly)
 	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Population)
