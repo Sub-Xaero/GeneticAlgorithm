@@ -8,6 +8,8 @@ import (
 type CrossoverFunction func(Genome, Genome) ([]Genome, error)
 
 var DefaultCrossoverFunc CrossoverFunction = func(gene, spouse Genome) ([]Genome, error) {
+	gene = gene.Copy()
+	spouse = spouse.Copy()
 	if len(gene.Sequence) != len(spouse.Sequence) {
 		return nil, errors.New("strings are not same length")
 	}
