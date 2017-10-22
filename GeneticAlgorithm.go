@@ -116,8 +116,7 @@ func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations i
 	// Init
 	genA.Population = make([]Genome, 0)
 	genA.Population = genA.FillRandomPopulation(populationSize, bitstringLength)
-
-	genA.BestCandidate = genA.Population[0]
+	genA.UpdateBestCandidate(genA.MaxFitnessCandidate(genA.Population))
 
 	// Run breeding cycles
 	for y := 1; y <= generations; y++ {
