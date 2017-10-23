@@ -179,9 +179,6 @@ func TestGACustomFunctions(t *testing.T) {
 
 func testGA(length, generations, expectedFitness, selectionMethod int, terminateEarly bool, t *testing.T) {
 	t.Parallel()
-	if testing.Short() {
-		t.Skip()
-	}
 	var geneticAlgorithm = NewGeneticAlgorithm()
 
 	switch selectionMethod {
@@ -210,24 +207,26 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 	}
 }
 
-func TestGA_Tournament_TerminateEarly_10(t *testing.T) { testGA(10, 100, 8, TOURNAMENT, true, t) }
-func TestGA_Tournament_TerminateEarly_20(t *testing.T) { testGA(20, 200, 15, TOURNAMENT, true, t) }
-func TestGA_Tournament_TerminateEarly_30(t *testing.T) { testGA(30, 300, 25, TOURNAMENT, true, t) }
-func TestGA_Tournament_TerminateEarly_40(t *testing.T) { testGA(40, 400, 35, TOURNAMENT, true, t) }
-func TestGA_Tournament_TerminateEarly_50(t *testing.T) { testGA(50, 500, 43, TOURNAMENT, true, t) }
-func TestGA_Tournament_Full_10(t *testing.T)           { testGA(10, 100, 8, TOURNAMENT, false, t) }
-func TestGA_Tournament_Full_20(t *testing.T)           { testGA(20, 200, 15, TOURNAMENT, false, t) }
-func TestGA_Tournament_Full_30(t *testing.T)           { testGA(30, 300, 25, TOURNAMENT, false, t) }
-func TestGA_Tournament_Full_40(t *testing.T)           { testGA(40, 400, 35, TOURNAMENT, false, t) }
-func TestGA_Tournament_Full_50(t *testing.T)           { testGA(50, 500, 40, TOURNAMENT, false, t) }
-
-func TestGA_Roulette_TerminateEarly_10(t *testing.T) { testGA(10, 100, 8, ROULETTE, true, t) }
-func TestGA_Roulette_TerminateEarly_20(t *testing.T) { testGA(20, 200, 15, ROULETTE, true, t) }
-func TestGA_Roulette_TerminateEarly_30(t *testing.T) { testGA(30, 300, 25, ROULETTE, true, t) }
-func TestGA_Roulette_TerminateEarly_40(t *testing.T) { testGA(40, 400, 35, ROULETTE, true, t) }
-func TestGA_Roulette_TerminateEarly_50(t *testing.T) { testGA(50, 500, 40, ROULETTE, true, t) }
-func TestGA_Roulette_Full_10(t *testing.T)           { testGA(10, 100, 8, ROULETTE, false, t) }
-func TestGA_Roulette_Full_20(t *testing.T)           { testGA(20, 200, 15, ROULETTE, false, t) }
-func TestGA_Roulette_Full_30(t *testing.T)           { testGA(30, 300, 25, ROULETTE, false, t) }
-func TestGA_Roulette_Full_40(t *testing.T)           { testGA(40, 400, 35, ROULETTE, false, t) }
-func TestGA_Roulette_Full_50(t *testing.T)           { testGA(50, 500, 40, ROULETTE, false, t) }
+func TestGA(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+	t.Run("Tournament", func(t *testing.T) {
+		for i := 1; i < 5; i++ {
+			t.Run(strconv.Itoa(i*10), func(t *testing.T) {
+				t.Parallel()
+				t.Run("TerminateEarly", func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.89), TOURNAMENT, true, t) })
+				t.Run("Full", func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.90), TOURNAMENT, false, t) })
+			})
+		}
+	})
+	t.Run("Roulette", func(t *testing.T) {
+		for i := 1; i < 5; i++ {
+			t.Run(strconv.Itoa(i*10), func(t *testing.T) {
+				t.Parallel()
+				t.Run("TerminateEarly", func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.89), ROULETTE, true, t) })
+				t.Run("Full", func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.90), ROULETTE, false, t) })
+			})
+		}
+	})
+}
