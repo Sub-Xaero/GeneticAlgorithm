@@ -55,7 +55,6 @@ func TestFillRandomPopulation(t *testing.T) {
 	gotLen := len(population)
 
 	if gotLen != expectedLen {
-
 		t.Error("Population not filled to specified size. Expected:", expectedLen, "Got:", gotLen)
 	} else {
 		t.Log("Population successfuly filled to specified size. Expected:", expectedLen, "Got:", gotLen)
@@ -208,25 +207,22 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 }
 
 func TestGA(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip()
 	}
 	t.Run("Tournament", func(t *testing.T) {
+		t.Parallel()
 		for i := 1; i < 5; i++ {
-			t.Run(strconv.Itoa(i*10), func(t *testing.T) {
-				t.Parallel()
-				t.Run("TerminateEarly", func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.89), TOURNAMENT, true, t) })
-				t.Run("Full", func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.90), TOURNAMENT, false, t) })
-			})
+			t.Run("TerminateEarly"+strconv.Itoa(i*10), func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.89), TOURNAMENT, true, t) })
+			t.Run("Full"+strconv.Itoa(i*10), func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.90), TOURNAMENT, false, t) })
 		}
 	})
 	t.Run("Roulette", func(t *testing.T) {
+		t.Parallel()
 		for i := 1; i < 5; i++ {
-			t.Run(strconv.Itoa(i*10), func(t *testing.T) {
-				t.Parallel()
-				t.Run("TerminateEarly", func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.89), ROULETTE, true, t) })
-				t.Run("Full", func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.90), ROULETTE, false, t) })
-			})
+			t.Run("TerminateEarly"+strconv.Itoa(i*10), func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.89), ROULETTE, true, t) })
+			t.Run("Full"+strconv.Itoa(i*10), func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.90), ROULETTE, false, t) })
 		}
 	})
 }
