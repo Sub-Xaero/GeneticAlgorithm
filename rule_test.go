@@ -22,7 +22,7 @@ func TestRule_String(t *testing.T) {
 	}
 }
 
-func TestRule_Matches_BadLength(t *testing.T) {
+func TestRule_MatchesBadLength(t *testing.T) {
 	t.Parallel()
 	rule1 := Rule{bitstring{"1", "0", "0"}, "0"}
 	rule2 := Rule{bitstring{"1", "0"}, "1"}
