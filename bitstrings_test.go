@@ -43,56 +43,61 @@ func TestDefaultGenerateCandidate(t *testing.T) {
 	}
 }
 
-func TestBadDefaultGenerateCandidate(t *testing.T) {
+func TestGenerateCandidate (t *testing.T) {
 	t.Parallel()
-	var genA = NewGeneticAlgorithm()
-	genA.SetSeed(3)
-	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
-
-	expectedLength := 0
-	_, err := genA.GenerateCandidate(expectedLength, genA.RandomEngine)
-
-	if err == nil {
-		t.Error("Bad candidate length did not throw error as it should. Err:", err)
-	} else {
-		t.Log("Successfully threw and caught error:", err)
-	}
-}
-
-func TestCustomGenerateCandidate(t *testing.T) {
-	t.Parallel()
-	var genA = NewGeneticAlgorithm()
-	genA.SetSeed(3)
-	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
-
-	genA.SetGenerateCandidate(func(length int, random *rand.Rand) (bitstring, error) {
-		var sequence bitstring
-		for i := 1; i <= length; i++ {
-			sequence = append(sequence, strconv.Itoa(i))
-		}
-		return sequence, nil
-	})
-
 	expectedLength := 9
-	sequence, err := genA.GenerateCandidate(expectedLength, genA.RandomEngine)
-
-	if err == nil {
-		t.Log("Successfully generated candidate")
-	} else {
-		t.Error("Unexpected error:", err)
+	setup := func () (bitstring, error) {
+		var genA= NewGeneticAlgorithm()
+		genA.SetGenerateCandidate(func(length int, random *rand.Rand) (bitstring, error) {
+			var sequence bitstring
+			for i := 1; i <= length; i++ {
+				sequence = append(sequence, strconv.Itoa(i))
+			}
+			return sequence, nil
+		})
+		return genA.GenerateCandidate(expectedLength, genA.RandomEngine)
 	}
 
-	length := len(sequence)
-	if length != expectedLength {
-		t.Error("String is not correct length.", "Expected:", expectedLength, "Got:", length)
-	} else {
-		t.Log("String is correct length. Expected:", expectedLength, "Got:", length)
-	}
-
-	expected := "[1 2 3 4 5 6 7 8 9]"
-	if fmt.Sprint(sequence) != expected {
-		t.Error("String is not correct string.", "Expected:", expected, "Got:", sequence)
-	} else {
-		t.Log("String is correct string.", "Expected:", expected, "Got:", sequence)
-	}
+	t.Run("BadLength", func(t *testing.T) {
+		t.Parallel()
+		var genA = NewGeneticAlgorithm()
+		genA.SetSeed(3)
+		genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+		expected := 0
+		_, err := genA.GenerateCandidate(expected, genA.RandomEngine)
+		if err == nil {
+			t.Error("Bad candidate length did not throw error as it should. Err:", err)
+		} else {
+			t.Log("Successfully threw and caught error:", err)
+		}
+	})
+	t.Run("GeneratesCandidate", func(t *testing.T) {
+		t.Parallel()
+		_, err := setup()
+		if err == nil {
+			t.Log("Successfully generated candidate")
+		} else {
+			t.Error("Unexpected error:", err)
+		}
+	})
+	t.Run("CorrectStringLength", func(t *testing.T) {
+		t.Parallel()
+		sequence, _ := setup()
+		length := len(sequence)
+		if length != expectedLength {
+			t.Error("String is not correct length.", "Expected:", expectedLength, "Got:", length)
+		} else {
+			t.Log("String is correct length. Expected:", expectedLength, "Got:", length)
+		}
+	})
+	t.Run("CorrectStringOutput", func(t *testing.T) {
+		t.Parallel()
+		sequence, _ := setup()
+		expected := "[1 2 3 4 5 6 7 8 9]"
+		if fmt.Sprint(sequence) != expected {
+			t.Error("String is not correct string.", "Expected:", expected, "Got:", sequence)
+		} else {
+			t.Log("String is correct string.", "Expected:", expected, "Got:", sequence)
+		}
+	})
 }
