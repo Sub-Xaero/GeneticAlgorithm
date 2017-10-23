@@ -151,8 +151,6 @@ func TestRuleGA(t *testing.T) {
 
 	InputRuleBase = make([]Rule, 0)
 
-	//ConditionLength := 5
-
 	file, err := os.OpenFile("data.txt", os.O_RDONLY, 7777)
 	scanner := bufio.NewScanner(file)
 	if err != nil {
