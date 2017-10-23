@@ -2,9 +2,6 @@ package ga
 
 import (
 	"errors"
-	"os"
-	"strconv"
-	"strings"
 	"math/rand"
 	"time"
 )
@@ -89,19 +86,6 @@ func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations i
 		return errors.New("random generator is not initialised")
 	}
 
-	// Open output file, to save results to
-	outputFile := "output.txt"
-	_, err := os.Stat(outputFile)
-	if !os.IsNotExist(err) {
-		os.Remove(outputFile)
-	}
-	f, err := os.OpenFile(outputFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, os.ModePerm)
-	check(err)
-	defer f.Close()
-	defer f.Sync()
-	outputString := strings.Join([]string{"Iteration", "AverageFitness", "MaxFitness", "\n"}, ",")
-	f.WriteString(outputString)
-
 	// Init
 	genA.Population = make([]Genome, 0)
 	genA.Population = genA.FillRandomPopulation(populationSize, bitstringLength)
@@ -154,9 +138,6 @@ func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations i
 		genA.Output("Final Population      :", breedingGround, "Average:", genA.AverageFitness(breedingGround), "Max:", genA.MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		genA.Output()
 		genA.Output()
-
-		outputString := strings.Join([]string{strconv.Itoa(y), strconv.Itoa(genA.AverageFitness(genA.Population)), strconv.Itoa(genA.MaxFitness(genA.Population)), "\n"}, ",")
-		f.WriteString(outputString)
 
 		if terminateEarly && float32(genA.IterationsSinceChange) > float32(generations)*0.25 {
 			genA.Output("Termination : Stagnating change")
