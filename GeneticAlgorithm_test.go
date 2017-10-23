@@ -70,18 +70,8 @@ func TestFillRandomPopulation(t *testing.T) {
 	}
 }
 
-func TestGA_NilGenerateCandidateFunc(t *testing.T) {
-	t.Parallel()
-	var geneticAlgorithm GeneticAlgorithm
-	geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
-	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
-	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
-	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
-	geneticAlgorithm.SetOutputFunc(PrintToConsole)
-	geneticAlgorithm.SetOutputFunc(PrintToConsole)
-	geneticAlgorithm.SetSeed(3)
+func testCustomFunctions(geneticAlgorithm *GeneticAlgorithm, t *testing.T) {
 	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
-
 	if err == nil {
 		t.Error("GA did not error as expected. Got:", err)
 	} else {
@@ -89,111 +79,101 @@ func TestGA_NilGenerateCandidateFunc(t *testing.T) {
 	}
 }
 
-func TestGA_NilCrossoverFunc(t *testing.T) {
+func TestGACustomFunctions(t *testing.T) {
 	t.Parallel()
-	var geneticAlgorithm GeneticAlgorithm
-	geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
-	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
-	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
-	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
-	geneticAlgorithm.SetOutputFunc(PrintToConsole)
-	geneticAlgorithm.SetSeed(3)
-	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
-
-	if err == nil {
-		t.Error("GA did not error as expected. Got:", err)
+	success := true
+	success = success && t.Run("NilGenerateCandidate", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+		geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		geneticAlgorithm.SetSeed(time.Now().Unix())
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+	success = success && t.Run("NilCrossover", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+		geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		geneticAlgorithm.SetSeed(time.Now().Unix())
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+	success = success && t.Run("NilMutate", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		geneticAlgorithm.SetSeed(time.Now().Unix())
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+	success = success && t.Run("NilFitness", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+		geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		geneticAlgorithm.SetSeed(time.Now().Unix())
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+	success = success && t.Run("NilSelection", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+		geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		geneticAlgorithm.SetSeed(time.Now().Unix())
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+	success = success && t.Run("NilOutput", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+		geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+		geneticAlgorithm.SetSeed(time.Now().Unix())
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+	success = success && t.Run("NilRandom", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+		geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+	success = success && t.Run("AllFuncs", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm = NewGeneticAlgorithm()
+		geneticAlgorithm.SetOutputFunc(func(a ...interface{}) { t.Log(a) })
+		err := geneticAlgorithm.Run(10, 10, 1, true, true, true)
+		if err != nil {
+			t.Error("GA errored unexpectedly. Got:", err)
+		} else {
+			t.Log("GA returned nil error as expected. Got:", err)
+		}
+	})
+	if success {
+		t.Log("Test GA Custom Functions Succeeded")
 	} else {
-		t.Log("GA errored as expected. Got:", err)
-	}
-}
-
-func TestGA_NilMutateFunc(t *testing.T) {
-	t.Parallel()
-	var geneticAlgorithm GeneticAlgorithm
-	geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
-	geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
-	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
-	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
-	geneticAlgorithm.SetOutputFunc(PrintToConsole)
-	geneticAlgorithm.SetSeed(3)
-	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
-
-	if err == nil {
-		t.Error("GA did not error as expected. Got:", err)
-	} else {
-		t.Log("GA errored as expected. Got:", err)
-	}
-}
-
-func TestGA_NilFitnessFunc(t *testing.T) {
-	t.Parallel()
-	var geneticAlgorithm GeneticAlgorithm
-	geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
-	geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
-	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
-	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
-	geneticAlgorithm.SetOutputFunc(PrintToConsole)
-	geneticAlgorithm.SetSeed(3)
-	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
-
-	if err == nil {
-		t.Error("GA did not error as expected. Got:", err)
-	} else {
-		t.Log("GA errored as expected. Got:", err)
-	}
-}
-
-func TestGA_NilSelectionFunc(t *testing.T) {
-	t.Parallel()
-	var geneticAlgorithm GeneticAlgorithm
-	geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
-	geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
-	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
-	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
-	geneticAlgorithm.SetOutputFunc(PrintToConsole)
-	geneticAlgorithm.SetSeed(3)
-	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
-
-	if err == nil {
-		t.Error("GA did not error as expected. Got:", err)
-	} else {
-		t.Log("GA errored as expected. Got:", err)
-	}
-}
-
-func TestGA_NilOutputFunc(t *testing.T) {
-	t.Parallel()
-	var geneticAlgorithm GeneticAlgorithm
-	geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
-	geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
-	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
-	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
-	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
-	geneticAlgorithm.SetSeed(3)
-	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
-
-	if err == nil {
-		t.Error("GA did not error as expected. Got:", err)
-	} else {
-		t.Log("GA errored as expected. Got:", err)
-	}
-}
-
-func TestGA_NilRandom(t *testing.T) {
-	t.Parallel()
-	var geneticAlgorithm GeneticAlgorithm
-	geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
-	geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
-	geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
-	geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
-	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
-	geneticAlgorithm.SetOutputFunc(PrintToConsole)
-	err := geneticAlgorithm.Run(1, 1, 1, true, true, true)
-
-	if err == nil {
-		t.Error("GA did not error as expected. Got:", err)
-	} else {
-		t.Log("GA errored as expected. Got:", err)
+		t.Error("Test GA Custom Functions Failed")
 	}
 }
 
