@@ -4,6 +4,7 @@ import (
 	"errors"
 	"math/rand"
 	"strconv"
+	"fmt"
 )
 
 type Bitstring []string
@@ -25,4 +26,13 @@ var DefaultGenerateCandidate GenerateCandidateFunction = func(length int, random
 // SetGenerateBitString sets the function that generates the Bitstring candidatePool
 func (genA *GeneticAlgorithm) SetGenerateCandidate(f GenerateCandidateFunction) {
 	genA.GenerateCandidate = f
+}
+
+// SetGenerateBitString sets the function that generates the Bitstring candidatePool
+func (b Bitstring) String() string {
+	output := ""
+	for _, val := range b {
+		output += fmt.Sprintf("%v", val)
+	}
+	return output
 }
