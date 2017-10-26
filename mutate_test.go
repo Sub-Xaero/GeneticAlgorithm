@@ -13,7 +13,7 @@ func TestSetMutateFunc(t *testing.T) {
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	genA.SetMutateFunc(func(gene Genome, random *rand.Rand) Genome {
-		return Genome{bitstring{"1", "2", "3", "4"}}
+		return Genome{Bitstring{"1", "2", "3", "4"}}
 	})
 
 	output := fmt.Sprint(genA.Mutate(Genome{}, genA.RandomEngine))
@@ -28,7 +28,7 @@ func TestSetMutateFunc(t *testing.T) {
 func TestDefaultMutateFunc(t *testing.T) {
 	t.Parallel()
 	genA := NewGeneticAlgorithm()
-	gene := Genome{bitstring{"1", "0", "1", "0", "1"}}
+	gene := Genome{Bitstring{"1", "0", "1", "0", "1"}}
 	geneOutput := genA.Mutate(gene, genA.RandomEngine)
 
 	if gene.String() == geneOutput.String() {

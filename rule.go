@@ -6,7 +6,7 @@ import (
 )
 
 type Rule struct {
-	condition bitstring
+	condition Bitstring
 	output    string
 }
 

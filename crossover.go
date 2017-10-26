@@ -15,8 +15,8 @@ var DefaultCrossoverFunc CrossoverFunction = func(gene, spouse Genome, random *r
 	}
 	crossover := random.Int() % len(gene.Sequence)
 	return []Genome{
-		{append(append(make(bitstring, 0), gene.Sequence[:crossover]...), spouse.Sequence[crossover:]...)},
-		{append(append(make(bitstring, 0), spouse.Sequence[:crossover]...), gene.Sequence[crossover:]...)},
+		{append(append(make(Bitstring, 0), gene.Sequence[:crossover]...), spouse.Sequence[crossover:]...)},
+		{append(append(make(Bitstring, 0), spouse.Sequence[:crossover]...), gene.Sequence[crossover:]...)},
 	}, nil
 }
 

@@ -10,7 +10,7 @@ func TestGenome_DefaultFitness(t *testing.T) {
 	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	genome := Genome{bitstring{"1", "1", "1", "1"}}
+	genome := Genome{Bitstring{"1", "1", "1", "1"}}
 
 	t.Log("Genome:", genome)
 	t.Log("Setting fitness func to default...")
@@ -32,7 +32,7 @@ func TestGenome_CustomFitness(t *testing.T) {
 	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	genome := Genome{bitstring{"0", "0", "0", "1"}}
+	genome := Genome{Bitstring{"0", "0", "0", "1"}}
 	t.Log(genome)
 	t.Log("Setting fitness func to custom...")
 	genA.SetFitnessFunc(func(gene Genome) int {
@@ -65,10 +65,10 @@ func TestAverageFitness(t *testing.T) {
 	genA.SetFitnessFunc(DefaultFitnessFunc)
 
 	population := []Genome{
-		{bitstring{"1", "1", "1", "1"}},
-		{bitstring{"1", "1", "1", "1"}},
-		{bitstring{"0", "0", "0", "0"}},
-		{bitstring{"0", "0", "0", "0"}},
+		{Bitstring{"1", "1", "1", "1"}},
+		{Bitstring{"1", "1", "1", "1"}},
+		{Bitstring{"0", "0", "0", "0"}},
+		{Bitstring{"0", "0", "0", "0"}},
 	}
 	t.Log("Created population:", population)
 
@@ -91,10 +91,10 @@ func TestMaxFitness(t *testing.T) {
 	genA.SetFitnessFunc(DefaultFitnessFunc)
 
 	population := []Genome{
-		{bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
-		{bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
-		{bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
-		{bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
+		{Bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
+		{Bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
+		{Bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
+		{Bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
 	}
 	t.Log("Created population:", population)
 
@@ -118,10 +118,10 @@ func TestMaxFitness(t *testing.T) {
 	})
 
 	population = []Genome{
-		{bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
-		{bitstring{"0", "0", "0", "0", "1", "1", "1", "1"}},
-		{bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
-		{bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
+		{Bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
+		{Bitstring{"0", "0", "0", "0", "1", "1", "1", "1"}},
+		{Bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
+		{Bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
 	}
 	t.Log("Created population:", population)
 

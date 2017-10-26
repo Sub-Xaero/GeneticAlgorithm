@@ -46,10 +46,10 @@ func TestDefaultGenerateCandidate(t *testing.T) {
 func TestGenerateCandidate (t *testing.T) {
 	t.Parallel()
 	expectedLength := 9
-	setup := func () (bitstring, error) {
+	setup := func () (Bitstring, error) {
 		var genA= NewGeneticAlgorithm()
-		genA.SetGenerateCandidate(func(length int, random *rand.Rand) (bitstring, error) {
-			var sequence bitstring
+		genA.SetGenerateCandidate(func(length int, random *rand.Rand) (Bitstring, error) {
+			var sequence Bitstring
 			for i := 1; i <= length; i++ {
 				sequence = append(sequence, strconv.Itoa(i))
 			}
