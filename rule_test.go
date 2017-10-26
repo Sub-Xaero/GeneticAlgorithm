@@ -123,6 +123,11 @@ func TestRuleGA(t *testing.T) {
 	geneticAlgorithm.SetSeed(3)
 	geneticAlgorithm.SetOutputFunc(func(a ...interface{}) { t.Log(a) })
 
+	conditionLength := 5
+	outputLength := 1
+	ruleLength := conditionLength + outputLength
+	numRules := 10
+
 	InputRuleBase = make([]Rule, 0)
 
 	file, err := os.OpenFile("data.txt", os.O_RDONLY, 7777)
@@ -136,12 +141,12 @@ func TestRuleGA(t *testing.T) {
 		}
 		text := scanner.Text()
 		ruleSequence := make(Bitstring, 0)
-		for char := 0; char < 5; char++ {
+		for char := 0; char < conditionLength; char++ {
 			num := string(text[char])
 			check(err)
 			ruleSequence = append(ruleSequence, num)
 		}
-		output := string(text[6])
+		output := string(text[conditionLength + 1:])
 		check(err)
 		InputRuleBase = append(InputRuleBase, Rule{ruleSequence, output})
 	}
@@ -149,10 +154,10 @@ func TestRuleGA(t *testing.T) {
 	geneticAlgorithm.SetFitnessFunc(func(gene Genome) int {
 		NewRuleBase := make([]Rule, 0)
 		fitnessValue := 0
-		for i := 0; i < len(gene.Sequence)-6-1; i += 6 {
-			condition := make(Bitstring, len(gene.Sequence[i:i+5]))
-			copy(condition, gene.Sequence[i:i+5])
-			rule := Rule{condition, gene.Sequence[i+5]}
+		for i := 0; i < len(gene.Sequence)-ruleLength-1; i += ruleLength {
+			condition := make(Bitstring, len(gene.Sequence[i:i+conditionLength]))
+			copy(condition, gene.Sequence[i:i+conditionLength])
+			rule := Rule{condition, gene.Sequence[i+conditionLength]}
 			NewRuleBase = append(NewRuleBase, rule)
 		}
 		for _, InputRule := range InputRuleBase {
@@ -170,35 +175,23 @@ func TestRuleGA(t *testing.T) {
 
 	geneticAlgorithm.SetMutateFunc(func(gene Genome, random *rand.Rand) Genome {
 		choice := random.Int() % len(gene.Sequence)
-		choice2 := random.Int() % 2
 
-		switch gene.Sequence[choice] {
-		case "0":
-			switch choice2 {
-			case 0:
-				gene.Sequence[choice] = "1"
-			case 1:
-				gene.Sequence[choice] = "#"
+		if (choice + 1) % 6 == 0 {
+
+		} else {
+			operators := [] string {"0", "1", "#"}
+			for index, val := range operators {
+				if string(gene.Sequence[choice]) == val {
+					operators = append(operators[0:index], operators[index+1:]...)
+				}
 			}
-		case "1":
-			switch choice2 {
-			case 0:
-				gene.Sequence[choice] = "0"
-			case 1:
-				gene.Sequence[choice] = "#"
-			}
-		case "#":
-			switch choice2 {
-			case 0:
-				gene.Sequence[choice] = "0"
-			case 1:
-				gene.Sequence[choice] = "1"
-			}
+			choice2 := random.Int() % len(operators)
+			gene.Sequence[choice] = operators[choice2]
 		}
 		return gene
 	})
 
-	geneticAlgorithm.Run(10, 60, 10, true, true, false)
+	geneticAlgorithm.Run(10, numRules * ruleLength, 10, true, true, false)
 	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Population)
 
 	expectedFitness := 8
