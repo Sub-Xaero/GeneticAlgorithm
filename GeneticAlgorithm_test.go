@@ -192,6 +192,13 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 	geneticAlgorithm.Run(length, length, generations, true, true, terminateEarly)
 	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Population)
 
+	gotBestCandidateLength := len(geneticAlgorithm.BestCandidate.Sequence)
+	if  gotBestCandidateLength != length {
+		t.Error("GA Best Candidate is not correct length", "Expected at least:", length, "Got:", gotBestCandidateLength)
+	} else {
+		t.Log("GA produced a suitable best candidate of a correct length.", "Expected at least:", length, "Got:", gotBestCandidateLength)
+	}
+
 	gotFitness := geneticAlgorithm.Fitness(geneticAlgorithm.BestCandidate)
 	if gotFitness < expectedFitness {
 		t.Error("GA did not produce a suitable candidate.", "Expected at least:", expectedFitness, "Got:", gotFitness)
