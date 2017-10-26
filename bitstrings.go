@@ -34,5 +34,5 @@ func (b Bitstring) String() string {
 	for _, val := range b {
 		output += fmt.Sprintf("%v", val)
 	}
-	return output
+	return "[" + output + "]"
 }
