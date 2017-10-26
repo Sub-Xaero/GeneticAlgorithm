@@ -151,15 +151,20 @@ func TestRuleGA(t *testing.T) {
 		InputRuleBase = append(InputRuleBase, Rule{ruleSequence, output})
 	}
 
-	geneticAlgorithm.SetFitnessFunc(func(gene Genome) int {
+	deriveRuleBase := func(sequence Bitstring) [] Rule {
 		NewRuleBase := make([]Rule, 0)
-		fitnessValue := 0
-		for i := 0; i < len(gene.Sequence)-ruleLength-1; i += ruleLength {
-			condition := make(Bitstring, len(gene.Sequence[i:i+conditionLength]))
-			copy(condition, gene.Sequence[i:i+conditionLength])
-			rule := Rule{condition, gene.Sequence[i+conditionLength]}
+		for i := 0; i < len(sequence)-ruleLength-1; i += ruleLength {
+			condition := make(Bitstring, len(sequence[i:i+conditionLength]))
+			copy(condition, sequence[i:i+conditionLength])
+			rule := Rule{condition, sequence[i+conditionLength]}
 			NewRuleBase = append(NewRuleBase, rule)
 		}
+		return NewRuleBase
+	}
+
+	geneticAlgorithm.SetFitnessFunc(func(gene Genome) int {
+		fitnessValue := 0
+		NewRuleBase := deriveRuleBase(gene.Sequence)
 		for _, InputRule := range InputRuleBase {
 			for _, GeneratedRule := range NewRuleBase {
 				matches, err := InputRule.Matches(GeneratedRule)
