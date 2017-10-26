@@ -18,7 +18,7 @@ func benchmarkGATournament(length, generations int, terminateEarly bool, b *test
 	var (
 		bestCandidate Genome
 		numIterations int
-		candidatePool    Population
+		candidatePool Population
 	)
 	for n := 0; n < b.N; n++ {
 		genA.Run(length, length, generations, true, true, terminateEarly)
@@ -44,7 +44,7 @@ func benchmarkGARoulette(length, generations int, terminateEarly bool, b *testin
 	var (
 		bestCandidate Genome
 		numIterations int
-		candidatePool    Population
+		candidatePool Population
 	)
 	for n := 0; n < b.N; n++ {
 		genA.Run(length, length, generations, true, true, terminateEarly)

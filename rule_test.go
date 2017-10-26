@@ -146,7 +146,7 @@ func TestRuleGA(t *testing.T) {
 			check(err)
 			ruleSequence = append(ruleSequence, num)
 		}
-		output := string(text[conditionLength + 1:])
+		output := string(text[conditionLength+1:])
 		check(err)
 		InputRuleBase = append(InputRuleBase, Rule{ruleSequence, output})
 	}
@@ -176,10 +176,10 @@ func TestRuleGA(t *testing.T) {
 	geneticAlgorithm.SetMutateFunc(func(gene Genome, random *rand.Rand) Genome {
 		choice := random.Int() % len(gene.Sequence)
 
-		if (choice + 1) % 6 == 0 {
+		if (choice+1)%6 == 0 {
 
 		} else {
-			operators := [] string {"0", "1", "#"}
+			operators := [] string{"0", "1", "#"}
 			for index, val := range operators {
 				if string(gene.Sequence[choice]) == val {
 					operators = append(operators[0:index], operators[index+1:]...)
@@ -191,7 +191,7 @@ func TestRuleGA(t *testing.T) {
 		return gene
 	})
 
-	geneticAlgorithm.Run(10, numRules * ruleLength, 10, true, true, false)
+	geneticAlgorithm.Run(10, numRules*ruleLength, 10, true, true, false)
 	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Candidates)
 
 	expectedFitness := 8
