@@ -93,7 +93,7 @@ func TestGenerateCandidate(t *testing.T) {
 	t.Run("CorrectStringOutput", func(t *testing.T) {
 		t.Parallel()
 		sequence, _ := setup()
-		expected := "[1 2 3 4 5 6 7 8 9]"
+		expected := "[123456789]"
 		if fmt.Sprint(sequence) != expected {
 			t.Error("String is not correct string.", "Expected:", expected, "Got:", sequence)
 		} else {

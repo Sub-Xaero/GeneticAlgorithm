@@ -13,7 +13,7 @@ func TestRule_String(t *testing.T) {
 	t.Parallel()
 	rule1 := Rule{Bitstring{"1", "0"}, "0"}
 
-	expected := "[1 0] 0"
+	expected := "[10] 0"
 	got := rule1.String()
 	if expected != got {
 		t.Error("Rule.toString does not match expected. Expected:", expected, "Got:", got)

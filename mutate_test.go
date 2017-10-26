@@ -17,7 +17,7 @@ func TestSetMutateFunc(t *testing.T) {
 	})
 
 	output := fmt.Sprint(genA.Mutate(Genome{}, genA.RandomEngine))
-	expectedOutput := "{[1 2 3 4]}"
+	expectedOutput := "{[1234]}"
 	if output != expectedOutput {
 		t.Error("Mutate function not set. Expected:", expectedOutput, "Got:", output)
 	} else {

@@ -21,25 +21,25 @@ func TestGenome_ToString(t *testing.T) {
 	})
 
 	outputString := Genome{Bitstring{"1", "1", "1", "1"}}.String()
-	expected := "{[1 1 1 1]}"
+	expected := "{[1111]}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
 
 	outputString = Genome{Bitstring{"1", "0", "1", "0", "1", "0", "1", "0", "1", "0"}}.String()
-	expected = "{[1 0 1 0 1 0 1 0 1 0]}"
+	expected = "{[1010101010]}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
 
 	outputString = Genome{Bitstring{"1", "1", "1", "1", "1", "1", "1", "1", "1", "1"}}.String()
-	expected = "{[1 1 1 1 1 1 1 1 1 1]}"
+	expected = "{[1111111111]}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
 
 	outputString = Genome{Bitstring{"1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"}}.String()
-	expected = "{[1 1 1 1 1 1 1 1 1 1 1 1]}"
+	expected = "{[111111111111]}"
 	if outputString != expected {
 		t.Error("Incorrect string:", outputString, "Expected:", expected)
 	}
