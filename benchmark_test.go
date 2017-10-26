@@ -8,7 +8,7 @@ var seed int64 = 3
 var (
 	globalBestCandidate Genome
 	globalNumIterations int
-	globalPopulation    []Genome
+	globalPopulation    Population
 )
 
 func benchmarkGATournament(length, generations int, terminateEarly bool, b *testing.B) {
@@ -18,17 +18,17 @@ func benchmarkGATournament(length, generations int, terminateEarly bool, b *test
 	var (
 		bestCandidate Genome
 		numIterations int
-		population    []Genome
+		candidatePool    Population
 	)
 	for n := 0; n < b.N; n++ {
 		genA.Run(length, length, generations, true, true, terminateEarly)
 		b.Log("Best Candidate", genA.BestCandidate)
 		b.Log("Num Iterations:", genA.Generations)
-		b.Log("Population:", genA.Population)
+		b.Log("Population:", genA.Candidates)
 	}
 	globalBestCandidate = bestCandidate
 	globalNumIterations = numIterations
-	globalPopulation = population
+	globalPopulation = candidatePool
 }
 
 func BenchmarkGATournamentFull_10(b *testing.B)           { benchmarkGATournament(10, 100, false, b) }
@@ -44,17 +44,17 @@ func benchmarkGARoulette(length, generations int, terminateEarly bool, b *testin
 	var (
 		bestCandidate Genome
 		numIterations int
-		population    []Genome
+		candidatePool    Population
 	)
 	for n := 0; n < b.N; n++ {
 		genA.Run(length, length, generations, true, true, terminateEarly)
 		b.Log("Best Candidate", genA.BestCandidate)
 		b.Log("Num Iterations:", genA.Generations)
-		b.Log("Population:", genA.Population)
+		b.Log("Population:", genA.Candidates)
 	}
 	globalBestCandidate = bestCandidate
 	globalNumIterations = numIterations
-	globalPopulation = population
+	globalPopulation = candidatePool
 }
 
 func BenchmarkGARouletteFull_10(b *testing.B)           { benchmarkGARoulette(10, 100, false, b) }

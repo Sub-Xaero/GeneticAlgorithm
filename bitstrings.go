@@ -22,7 +22,7 @@ var DefaultGenerateCandidate GenerateCandidateFunction = func(length int, random
 	return sequence, nil
 }
 
-// SetGenerateBitString sets the function that generates the Bitstring population
+// SetGenerateBitString sets the function that generates the Bitstring candidatePool
 func (genA *GeneticAlgorithm) SetGenerateCandidate(f GenerateCandidateFunction) {
 	genA.GenerateCandidate = f
 }

@@ -13,7 +13,7 @@ func check(e error) {
 }
 
 type GeneticAlgorithm struct {
-	Population    []Genome
+	Candidates    Population
 	BestCandidate Genome
 	Generations   int
 
@@ -52,14 +52,14 @@ func (genA *GeneticAlgorithm) UpdateBestCandidate(bestGeneration Genome) {
 	}
 }
 
-func (genA *GeneticAlgorithm) FillRandomPopulation(populationSize, candidateLength int) []Genome {
-	population := make([]Genome, 0)
-	for len(population) < populationSize {
+func (genA *GeneticAlgorithm) FillRandomPopulation(populationSize, candidateLength int) Population {
+	candidatePool := make(Population, 0)
+	for len(candidatePool) < populationSize {
 		bitstring, err := genA.GenerateCandidate(candidateLength, genA.RandomEngine)
 		check(err)
-		population = append(population, Genome{bitstring})
+		candidatePool = append(candidatePool, Genome{bitstring})
 	}
-	return population
+	return candidatePool
 }
 
 func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations int, crossover, mutate, terminateEarly bool) error {
@@ -87,36 +87,36 @@ func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations i
 	}
 
 	// Init
-	genA.Population = make([]Genome, 0)
-	genA.Population = genA.FillRandomPopulation(populationSize, bitstringLength)
-	genA.UpdateBestCandidate(genA.MaxFitnessCandidate(genA.Population))
+	genA.Candidates = make(Population, 0)
+	genA.Candidates = genA.FillRandomPopulation(populationSize, bitstringLength)
+	genA.UpdateBestCandidate(genA.MaxFitnessCandidate(genA.Candidates))
 
 	// Run breeding cycles
 	for y := 1; y <= generations; y++ {
 		var bestCandidateOfGeneration Genome
 
-		bestCandidateOfGeneration = genA.MaxFitnessCandidate(genA.Population)
+		bestCandidateOfGeneration = genA.MaxFitnessCandidate(genA.Candidates)
 		genA.UpdateBestCandidate(bestCandidateOfGeneration)
 		genA.Output("Iteration", y)
-		genA.Output("Start Population      :", genA.Population, "Average:", genA.AverageFitness(genA.Population), "Max:", genA.MaxFitness(genA.Population), "Best:", bestCandidateOfGeneration.Sequence)
+		genA.Output("Start Population      :", genA.Candidates, "Average:", genA.AverageFitness(genA.Candidates), "Max:", genA.MaxFitness(genA.Candidates), "Best:", bestCandidateOfGeneration.Sequence)
 
 		// Tournament
-		breedingGround := make([]Genome, 0)
-		breedingGround = append(breedingGround, genA.Selection(genA.Fitness, genA.Population, genA.RandomEngine)...)
-		bestCandidateOfGeneration = genA.MaxFitnessCandidate(genA.Population)
+		breedingGround := make(Population, 0)
+		breedingGround = append(breedingGround, genA.Selection(genA.Fitness, genA.Candidates, genA.RandomEngine)...)
+		bestCandidateOfGeneration = genA.MaxFitnessCandidate(genA.Candidates)
 		genA.UpdateBestCandidate(bestCandidateOfGeneration)
 		genA.Output("Tournament Offspring  :", breedingGround, "Average:", genA.AverageFitness(breedingGround), "Max:", genA.MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 
 		// Crossover
 		if crossover {
-			crossoverBreedingGround := make([]Genome, 0)
+			crossoverBreedingGround := make(Population, 0)
 			for i := 0; i+1 < len(breedingGround); i += 2 {
 				newOffspring, err := genA.Crossover(breedingGround[i], breedingGround[i+1], genA.RandomEngine)
 				check(err)
 				crossoverBreedingGround = append(crossoverBreedingGround, newOffspring...)
 			}
 			breedingGround = crossoverBreedingGround
-			bestCandidateOfGeneration = genA.MaxFitnessCandidate(genA.Population)
+			bestCandidateOfGeneration = genA.MaxFitnessCandidate(genA.Candidates)
 			genA.UpdateBestCandidate(bestCandidateOfGeneration)
 			genA.Output("Crossover Offspring   :", breedingGround, "Average:", genA.AverageFitness(breedingGround), "Max:", genA.MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		}
@@ -126,15 +126,15 @@ func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations i
 			for index := range breedingGround {
 				breedingGround[index] = genA.Mutate(breedingGround[index], genA.RandomEngine)
 			}
-			bestCandidateOfGeneration = genA.MaxFitnessCandidate(genA.Population)
+			bestCandidateOfGeneration = genA.MaxFitnessCandidate(genA.Candidates)
 			genA.UpdateBestCandidate(bestCandidateOfGeneration)
 			genA.Output("Mutation Offspring    :", breedingGround, "Average:", genA.AverageFitness(breedingGround), "Max:", genA.MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		}
 
 		genA.Generations++
 		genA.IterationsSinceChange++
-		genA.Population = make([]Genome, populationSize)
-		copy(genA.Population, breedingGround)
+		genA.Candidates = make(Population, populationSize)
+		copy(genA.Candidates, breedingGround)
 		genA.Output("Final Population      :", breedingGround, "Average:", genA.AverageFitness(breedingGround), "Max:", genA.MaxFitness(breedingGround), "Best:", bestCandidateOfGeneration.Sequence)
 		genA.Output()
 		genA.Output()

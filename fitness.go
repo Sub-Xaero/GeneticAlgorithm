@@ -17,22 +17,22 @@ func (genA *GeneticAlgorithm) SetFitnessFunc(f FitnessFunction) {
 	genA.Fitness = f
 }
 
-// AverageFitness returns the average fitness of a [] Genome population
-func (genA *GeneticAlgorithm) AverageFitness(population []Genome) int {
+// AverageFitness returns the average fitness of a [] Genome candidatePool
+func (genA *GeneticAlgorithm) AverageFitness(candidatePool Population) int {
 	var average int = 0
-	for _, i := range population {
+	for _, i := range candidatePool {
 		average += genA.Fitness(i)
 	}
-	return average / int(len(population))
+	return average / int(len(candidatePool))
 }
 
-// MaxFitness returns the highest fitness found in a [] Genome population
-func (genA *GeneticAlgorithm) MaxFitnessCandidate(population []Genome) Genome {
+// MaxFitness returns the highest fitness found in a [] Genome candidatePool
+func (genA *GeneticAlgorithm) MaxFitnessCandidate(candidatePool Population) Genome {
 	var (
 		max     int = 0
 		maxGene Genome
 	)
-	for _, i := range population {
+	for _, i := range candidatePool {
 		if genA.Fitness(i) > max {
 			max = genA.Fitness(i)
 			maxGene = i
@@ -41,7 +41,7 @@ func (genA *GeneticAlgorithm) MaxFitnessCandidate(population []Genome) Genome {
 	return maxGene
 }
 
-// MaxFitness returns the highest fitness found in a [] Genome population
-func (genA *GeneticAlgorithm) MaxFitness(population []Genome) int {
-	return genA.Fitness(genA.MaxFitnessCandidate(population))
+// MaxFitness returns the highest fitness found in a [] Genome candidatePool
+func (genA *GeneticAlgorithm) MaxFitness(candidatePool Population) int {
+	return genA.Fitness(genA.MaxFitnessCandidate(candidatePool))
 }

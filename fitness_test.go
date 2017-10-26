@@ -64,16 +64,16 @@ func TestAverageFitness(t *testing.T) {
 	t.Log("Setting fitness func to default...")
 	genA.SetFitnessFunc(DefaultFitnessFunc)
 
-	population := []Genome{
+	candidatePool := Population{
 		{Bitstring{"1", "1", "1", "1"}},
 		{Bitstring{"1", "1", "1", "1"}},
 		{Bitstring{"0", "0", "0", "0"}},
 		{Bitstring{"0", "0", "0", "0"}},
 	}
-	t.Log("Created population:", population)
+	t.Log("Created candidatePool:", candidatePool)
 
 	expectedFitness := 2
-	gotFitness := genA.AverageFitness(population)
+	gotFitness := genA.AverageFitness(candidatePool)
 	if gotFitness != expectedFitness {
 		t.Error("Incorrect average fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	} else {
@@ -90,16 +90,16 @@ func TestMaxFitness(t *testing.T) {
 	t.Log("Setting fitness func to default...")
 	genA.SetFitnessFunc(DefaultFitnessFunc)
 
-	population := []Genome{
+	candidatePool := Population{
 		{Bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
 		{Bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
 		{Bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
 		{Bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
 	}
-	t.Log("Created population:", population)
+	t.Log("Created candidatePool:", candidatePool)
 
 	expectedFitness := 8
-	gotFitness := genA.MaxFitness(population)
+	gotFitness := genA.MaxFitness(candidatePool)
 	if gotFitness != expectedFitness {
 		t.Error("Incorrect max fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	} else {
@@ -117,16 +117,16 @@ func TestMaxFitness(t *testing.T) {
 		return count
 	})
 
-	population = []Genome{
+	candidatePool = Population{
 		{Bitstring{"1", "1", "1", "1", "1", "1", "1", "1"}},
 		{Bitstring{"0", "0", "0", "0", "1", "1", "1", "1"}},
 		{Bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
 		{Bitstring{"0", "0", "0", "0", "0", "0", "0", "0"}},
 	}
-	t.Log("Created population:", population)
+	t.Log("Created candidatePool:", candidatePool)
 
 	expectedFitness = 8
-	gotFitness = genA.MaxFitness(population)
+	gotFitness = genA.MaxFitness(candidatePool)
 	if gotFitness != expectedFitness {
 		t.Error("Incorrect max fitness.", "Expected:", expectedFitness, "Got:", gotFitness)
 	} else {

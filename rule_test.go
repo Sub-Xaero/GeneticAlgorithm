@@ -192,7 +192,7 @@ func TestRuleGA(t *testing.T) {
 	})
 
 	geneticAlgorithm.Run(10, numRules * ruleLength, 10, true, true, false)
-	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Population)
+	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Candidates)
 
 	expectedFitness := 8
 	gotFitness := geneticAlgorithm.Fitness(geneticAlgorithm.BestCandidate)

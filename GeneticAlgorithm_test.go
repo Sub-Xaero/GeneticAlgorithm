@@ -50,9 +50,9 @@ func TestFillRandomPopulation(t *testing.T) {
 	geneticAlgorithm.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
 	expectedLen := 10
-	population := make([]Genome, 0)
-	population = geneticAlgorithm.FillRandomPopulation(expectedLen, expectedLen)
-	gotLen := len(population)
+	candidatePool := make(Population, 0)
+	candidatePool = geneticAlgorithm.FillRandomPopulation(expectedLen, expectedLen)
+	gotLen := len(candidatePool)
 
 	if gotLen != expectedLen {
 		t.Error("Population not filled to specified size. Expected:", expectedLen, "Got:", gotLen)
@@ -60,11 +60,11 @@ func TestFillRandomPopulation(t *testing.T) {
 		t.Log("Population successfuly filled to specified size. Expected:", expectedLen, "Got:", gotLen)
 	}
 
-	for i, val := range population {
+	for i, val := range candidatePool {
 		if len(val.Sequence) == 0 {
-			t.Error("Bitstring:", i, " in population is empty")
+			t.Error("Bitstring:", i, " in candidatePool is empty")
 		} else {
-			t.Log("Bitstring:", i, " in population successfully filled")
+			t.Log("Bitstring:", i, " in candidatePool successfully filled")
 		}
 	}
 }
@@ -190,7 +190,7 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 	geneticAlgorithm.SetSeed(3)
 
 	geneticAlgorithm.Run(length, length, generations, true, true, terminateEarly)
-	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Population)
+	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Candidates)
 
 	gotBestCandidateLength := len(geneticAlgorithm.BestCandidate.Sequence)
 	if  gotBestCandidateLength != length {

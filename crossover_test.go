@@ -11,11 +11,11 @@ func TestDefaultCrossover(t *testing.T) {
 	var genA = NewGeneticAlgorithm()
 	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
-	population := []Genome{
+	candidatePool := Population{
 		{Bitstring{"1", "0", "0", "0"}},
 		{Bitstring{"0", "0", "0", "1"}},
 	}
-	offspring, err := genA.Crossover(population[0], population[1], genA.RandomEngine)
+	offspring, err := genA.Crossover(candidatePool[0], candidatePool[1], genA.RandomEngine)
 
 	if err != nil {
 		t.Error("Unexpected error:", err)
@@ -47,11 +47,11 @@ func TestBadDefaultCrossover(t *testing.T) {
 	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	population := []Genome{
+	candidatePool := Population{
 		{Bitstring{"1", "0", "0", "0"}},
 		{Bitstring{"0", "0", "0"}},
 	}
-	_, err := genA.Crossover(population[0], population[1], genA.RandomEngine)
+	_, err := genA.Crossover(candidatePool[0], candidatePool[1], genA.RandomEngine)
 	if err == nil {
 		t.Error("Expected error but got:", err)
 	} else {
@@ -65,8 +65,8 @@ func TestSetCrossoverFunc(t *testing.T) {
 	genA.SetSeed(3)
 	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
 
-	genA.SetCrossoverFunc(func(gene, spouse Genome, random *rand.Rand) ([]Genome, error) {
-		return []Genome{{Bitstring{"1", "2", "3", "4"}}}, nil
+	genA.SetCrossoverFunc(func(gene, spouse Genome, random *rand.Rand) (Population, error) {
+		return Population{{Bitstring{"1", "2", "3", "4"}}}, nil
 	})
 
 	expectedString := "[{[1 2 3 4]}]"
