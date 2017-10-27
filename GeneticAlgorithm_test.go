@@ -215,19 +215,20 @@ func testGA(length, generations, expectedFitness, selectionMethod int, terminate
 
 func TestGA(t *testing.T) {
 	t.Parallel()
+	x := 5
 	if testing.Short() {
-		t.Skip()
+		x = 1
 	}
 	t.Run("Tournament", func(t *testing.T) {
 		t.Parallel()
-		for i := 1; i <= 5; i++ {
+		for i := 1; i <= x; i++ {
 			t.Run("TerminateEarly"+strconv.Itoa(i*10), func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.89), TOURNAMENT, true, t) })
 			t.Run("Full"+strconv.Itoa(i*10), func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.90), TOURNAMENT, false, t) })
 		}
 	})
 	t.Run("Roulette", func(t *testing.T) {
 		t.Parallel()
-		for i := 1; i <= 5; i++ {
+		for i := 1; i <= x; i++ {
 			t.Run("TerminateEarly"+strconv.Itoa(i*10), func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.89), ROULETTE, true, t) })
 			t.Run("Full"+strconv.Itoa(i*10), func(t *testing.T) { testGA(i*10, i*100, int(float32(i*10.0)*0.90), ROULETTE, false, t) })
 		}
