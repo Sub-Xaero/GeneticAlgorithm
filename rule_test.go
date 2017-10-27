@@ -151,9 +151,9 @@ func TestRuleGA(t *testing.T) {
 		InputRuleBase = append(InputRuleBase, Rule{ruleSequence, output})
 	}
 
-	deriveRuleBase := func(sequence Bitstring) [] Rule {
+	decodeRuleBase := func(sequence Bitstring) []Rule {
 		NewRuleBase := make([]Rule, 0)
-		for i := 0; i < len(sequence)-ruleLength-1; i += ruleLength {
+		for i := 0; i < len(sequence); i += ruleLength {
 			condition := make(Bitstring, len(sequence[i:i+conditionLength]))
 			copy(condition, sequence[i:i+conditionLength])
 			rule := Rule{condition, sequence[i+conditionLength]}
@@ -162,9 +162,22 @@ func TestRuleGA(t *testing.T) {
 		return NewRuleBase
 	}
 
+	encodeRuleBase := func(ruleBase []Rule) Bitstring {
+		var sequence Bitstring
+		for _, rule := range ruleBase {
+			for _, condition := range rule.Condition {
+				sequence = append(sequence, string(condition))
+			}
+			for _, output := range rule.Output {
+				sequence = append(sequence, string(output))
+			}
+		}
+		return sequence
+	}
+
 	geneticAlgorithm.SetFitnessFunc(func(gene Genome) int {
 		fitnessValue := 0
-		NewRuleBase := deriveRuleBase(gene.Sequence)
+		NewRuleBase := decodeRuleBase(gene.Sequence)
 		for _, InputRule := range InputRuleBase {
 			for _, GeneratedRule := range NewRuleBase {
 				matches, err := InputRule.Matches(GeneratedRule)
@@ -179,21 +192,19 @@ func TestRuleGA(t *testing.T) {
 	})
 
 	geneticAlgorithm.SetMutateFunc(func(gene Genome, random *rand.Rand) Genome {
-		choice := random.Int() % len(gene.Sequence)
-
-		if (choice+1)%6 == 0 {
-
-		} else {
-			operators := [] string{"0", "1", "#"}
-			for index, val := range operators {
-				if string(gene.Sequence[choice]) == val {
-					operators = append(operators[0:index], operators[index+1:]...)
-				}
+		NewRuleBase := decodeRuleBase(gene.Sequence)
+		gene = gene.Copy()
+		choice := random.Int() % len(NewRuleBase)
+		choice2 := random.Int() % len(NewRuleBase[choice].Condition)
+		operators := []string{"0", "1", "#"}
+		for index, val := range operators {
+			if NewRuleBase[choice].Condition[choice2] == val {
+				operators = append(operators[0:index], operators[index+1:]...)
 			}
-			choice2 := random.Int() % len(operators)
-			gene.Sequence[choice] = operators[choice2]
 		}
-		return gene
+		choice3 := random.Int() % len(operators)
+		NewRuleBase[choice].Condition[choice2] = operators[choice3]
+		return Genome{encodeRuleBase(NewRuleBase)}
 	})
 
 	geneticAlgorithm.Run(10, numRules*ruleLength, 10, true, true, false)
