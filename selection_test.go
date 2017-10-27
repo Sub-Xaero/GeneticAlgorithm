@@ -1,8 +1,8 @@
 package ga
 
 import (
-	"testing"
 	"math/rand"
+	"testing"
 )
 
 func TestSetSelectionFunc(t *testing.T) {

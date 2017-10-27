@@ -2,9 +2,9 @@ package ga
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 	"strconv"
-	"fmt"
 )
 
 type Bitstring []string
@@ -32,7 +32,7 @@ func (genA *GeneticAlgorithm) SetGenerateCandidate(f GenerateCandidateFunction) 
 func (b Bitstring) String() string {
 	output := ""
 	for _, val := range b {
-		output += fmt.Sprintf("%v", val)
+		output += fmt.Sprintf("%v", val) + " "
 	}
 	return "[" + output + "]"
 }

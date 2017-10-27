@@ -1,8 +1,8 @@
 package ga
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestDefaultOutputFunc(t *testing.T) {

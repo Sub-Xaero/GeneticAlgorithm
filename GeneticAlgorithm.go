@@ -2,9 +2,10 @@ package ga
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
-	"time"
 	"strconv"
+	"time"
 )
 
 func check(e error) {
@@ -72,14 +73,14 @@ func (genA *GeneticAlgorithm) Summarise(title string, candidatePool Population) 
 		if len(val.Sequence) <= 10 {
 			output += val.Sequence.String()
 		} else {
-			output += strconv.Itoa(genA.Fitness(val))
+			output += fmt.Sprintf("%3v", genA.Fitness(val))
 		}
 		output += "]"
 	}
 	output += "}"
 	output += " Max : " + strconv.Itoa(genA.MaxFitness(candidatePool))
 	output += " Average : " + strconv.Itoa(genA.AverageFitness(candidatePool))
-	output += " Best Candidate : " + genA.MaxFitnessCandidate(candidatePool).String()
+	output += " Best : " + genA.MaxFitnessCandidate(candidatePool).String()
 	genA.Output(output)
 }
 

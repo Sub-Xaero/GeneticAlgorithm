@@ -26,7 +26,7 @@ func TestDefaultCrossover(t *testing.T) {
 	found := false
 	foundIndex := 0
 
-	expectedString := "{[1001]}"
+	expectedString := "{[1 0 0 1 ]}"
 	for i, val := range offspring {
 		if fmt.Sprint(val) == expectedString {
 			found = true
@@ -69,7 +69,7 @@ func TestSetCrossoverFunc(t *testing.T) {
 		return Population{{Bitstring{"1", "2", "3", "4"}}}, nil
 	})
 
-	expectedString := "[{[1234]}]"
+	expectedString := "[{[1 2 3 4 ]}]"
 	crossoverGene, err := genA.Crossover(Genome{}, Genome{}, genA.RandomEngine)
 
 	if err != nil {
