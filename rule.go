@@ -1,32 +1,32 @@
 package ga
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 )
 
 type Rule struct {
-	condition Bitstring
-	output    string
+	Condition Bitstring
+	Output    string
 }
 
 func (rule1 Rule) Matches(rule2 Rule) (bool, error) {
-	if len(rule1.condition) != len(rule2.condition) {
+	if len(rule1.Condition) != len(rule2.Condition) {
 		return false, errors.New("conditions are not same length")
 	}
 	conditionMatches := true
-	for i := range rule1.condition {
-		if string(rule1.condition[i]) == "#" || string(rule2.condition[i]) == "#" {
+	for i := range rule1.Condition {
+		if string(rule1.Condition[i]) == "#" || string(rule2.Condition[i]) == "#" {
 			continue
-		} else if string(rule1.condition[i]) != string(rule2.condition[i]) {
+		} else if string(rule1.Condition[i]) != string(rule2.Condition[i]) {
 			conditionMatches = false
 			break
 		}
 	}
-	outputMatches := rule1.output == rule2.output
+	outputMatches := rule1.Output == rule2.Output
 	return outputMatches && conditionMatches, nil
 }
 
 func (r Rule) String() string {
-	return fmt.Sprintf("%v %v", r.condition, r.output)
+	return fmt.Sprintf("%v %v", r.Condition, r.Output)
 }
