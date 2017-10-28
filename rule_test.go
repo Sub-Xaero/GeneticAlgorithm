@@ -126,7 +126,7 @@ func TestRuleGA(t *testing.T) {
 	conditionLength := 5
 	outputLength := 1
 	ruleLength := conditionLength + outputLength
-	numRules := 10
+	numRules := 32
 
 	InputRuleBase = make([]Rule, 0)
 
