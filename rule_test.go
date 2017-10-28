@@ -187,6 +187,8 @@ func TestRuleGA(t *testing.T) {
 	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Candidates)
 
 	expectedFitness := 8
+	geneticAlgorithm.Output(DecodeRuleBase(geneticAlgorithm.BestCandidate.Sequence, conditionLength, ruleLength))
+
 	gotFitness := geneticAlgorithm.Fitness(geneticAlgorithm.BestCandidate)
 
 	if gotFitness < expectedFitness {
