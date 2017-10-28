@@ -170,16 +170,20 @@ func TestRuleGA(t *testing.T) {
 	geneticAlgorithm.SetMutateFunc(func(gene Genome, random *rand.Rand) Genome {
 		NewRuleBase := DecodeRuleBase(gene.Sequence, conditionLength, ruleLength)
 		gene = gene.Copy()
-		choice := random.Int() % len(NewRuleBase)
-		choice2 := random.Int() % len(NewRuleBase[choice].Condition)
-		operators := []string{"0", "1", "#"}
-		for index, val := range operators {
-			if NewRuleBase[choice].Condition[choice2] == val {
-				operators = append(operators[0:index], operators[index+1:]...)
+		for rule := range NewRuleBase {
+			chance := random.Int() % 100
+			if chance < 5 {
+				choice2 := random.Int() % len(NewRuleBase[rule].Condition)
+				operators := []string{"0", "1", "#"}
+				for index, val := range operators {
+					if NewRuleBase[rule].Condition[choice2] == val {
+						operators = append(operators[0:index], operators[index+1:]...)
+					}
+				}
+				choice3 := random.Int() % len(operators)
+				NewRuleBase[rule].Condition[choice2] = operators[choice3]
 			}
 		}
-		choice3 := random.Int() % len(operators)
-		NewRuleBase[choice].Condition[choice2] = operators[choice3]
 		return Genome{EncodeRuleBase(NewRuleBase)}
 	})
 
