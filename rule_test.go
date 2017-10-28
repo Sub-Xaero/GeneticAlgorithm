@@ -130,7 +130,7 @@ func TestRuleGA(t *testing.T) {
 
 	InputRuleBase = make([]Rule, 0)
 
-	file, err := os.OpenFile("data1.txt", os.O_RDONLY, 7777)
+	file, err := os.OpenFile("data/data1.txt", os.O_RDONLY, 7777)
 	scanner := bufio.NewScanner(file)
 	if err != nil {
 		t.Error(err)
