@@ -10,6 +10,7 @@ type Rule struct {
 	Output    string
 }
 
+type RuleBase []Rule
 type RulesMatchFunc func(Rule, Rule) (bool, error)
 
 var DefaultRulesMatchFunc RulesMatchFunc = func(rule1, rule2 Rule) (bool, error) {
