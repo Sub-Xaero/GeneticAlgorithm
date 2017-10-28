@@ -10,7 +10,7 @@ type Rule struct {
 	Output    string
 }
 
-func (rule1 Rule) Matches(rule2 Rule) (bool, error) {
+var DefaultRulesMatchFunc RulesMatchFunc = func(rule1, rule2 Rule) (bool, error) {
 	if len(rule1.Condition) != len(rule2.Condition) {
 		return false, errors.New("conditions are not same length")
 	}
@@ -27,6 +27,14 @@ func (rule1 Rule) Matches(rule2 Rule) (bool, error) {
 	return outputMatches && conditionMatches, nil
 }
 
+var RulesMatch = DefaultRulesMatchFunc
+
+// SetMutateFunc changes the mutate function to the function specified
+func SetRulesMatchFunc(f RulesMatchFunc) {
+	RulesMatch = f
+}
+
 func (r Rule) String() string {
 	return fmt.Sprintf("%v %v", r.Condition, r.Output)
 }
+

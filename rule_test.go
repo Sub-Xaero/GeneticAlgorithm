@@ -36,7 +36,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0", "0"}, "0"}
 		rule2 := Rule{Bitstring{"1", "0"}, "1"}
-		got, err := rule1.Matches(rule2)
+		got, err := RulesMatch(rule1, rule2)
 		if err == nil {
 			t.Error("Expected error, strings are not same length. No error thrown.")
 		} else {
@@ -48,7 +48,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0"}, "0"}
 		rule2 := Rule{Bitstring{"1", "0"}, "1"}
-		got, err := rule1.Matches(rule2)
+		got, err := RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -60,7 +60,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0"}, "1"}
 		rule2 := Rule{Bitstring{"#", "1"}, "1"}
-		got, err := rule1.Matches(rule2)
+		got, err := RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -72,7 +72,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "1", "0"}, "1"}
 		rule2 := Rule{Bitstring{"#", "#", "1"}, "1"}
-		got, err := rule1.Matches(rule2)
+		got, err := RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -84,7 +84,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0"}, "1"}
 		rule2 := Rule{Bitstring{"1", "0"}, "1"}
-		got, err := rule1.Matches(rule2)
+		got, err := RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -96,7 +96,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0", "#"}, "1"}
 		rule2 := Rule{Bitstring{"1", "0", "1"}, "1"}
-		got, err := rule1.Matches(rule2)
+		got, err := RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -108,7 +108,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"#", "0", "#"}, "1"}
 		rule2 := Rule{Bitstring{"1", "0", "1"}, "1"}
-		got, err := rule1.Matches(rule2)
+		got, err := RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -180,7 +180,7 @@ func TestRuleGA(t *testing.T) {
 		NewRuleBase := decodeRuleBase(gene.Sequence)
 		for _, InputRule := range InputRuleBase {
 			for _, GeneratedRule := range NewRuleBase {
-				matches, err := InputRule.Matches(GeneratedRule)
+				matches, err := RulesMatch(InputRule, GeneratedRule)
 				check(err)
 				if matches {
 					fitnessValue++
