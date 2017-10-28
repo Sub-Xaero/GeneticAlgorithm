@@ -41,3 +41,26 @@ func (r Rule) String() string {
 	return fmt.Sprintf("%v %v", r.Condition, r.Output)
 }
 
+func DecodeRuleBase(sequence Bitstring, conditionLength, ruleLength int) RuleBase {
+	NewRuleBase := make([]Rule, 0)
+	for i := 0; i < len(sequence); i += ruleLength {
+		condition := make(Bitstring, len(sequence[i:i+conditionLength]))
+		copy(condition, sequence[i:i+conditionLength])
+		rule := Rule{condition, sequence[i+conditionLength]}
+		NewRuleBase = append(NewRuleBase, rule)
+	}
+	return NewRuleBase
+}
+
+func EncodeRuleBase(paramRuleBase RuleBase) Bitstring {
+	var sequence Bitstring
+	for _, rule := range paramRuleBase {
+		for _, condition := range rule.Condition {
+			sequence = append(sequence, string(condition))
+		}
+		for _, output := range rule.Output {
+			sequence = append(sequence, string(output))
+		}
+	}
+	return sequence
+}

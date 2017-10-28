@@ -151,33 +151,9 @@ func TestRuleGA(t *testing.T) {
 		InputRuleBase = append(InputRuleBase, Rule{ruleSequence, output})
 	}
 
-	decodeRuleBase := func(sequence Bitstring) []Rule {
-		NewRuleBase := make([]Rule, 0)
-		for i := 0; i < len(sequence); i += ruleLength {
-			condition := make(Bitstring, len(sequence[i:i+conditionLength]))
-			copy(condition, sequence[i:i+conditionLength])
-			rule := Rule{condition, sequence[i+conditionLength]}
-			NewRuleBase = append(NewRuleBase, rule)
-		}
-		return NewRuleBase
-	}
-
-	encodeRuleBase := func(ruleBase []Rule) Bitstring {
-		var sequence Bitstring
-		for _, rule := range ruleBase {
-			for _, condition := range rule.Condition {
-				sequence = append(sequence, string(condition))
-			}
-			for _, output := range rule.Output {
-				sequence = append(sequence, string(output))
-			}
-		}
-		return sequence
-	}
-
 	geneticAlgorithm.SetFitnessFunc(func(gene Genome) int {
 		fitnessValue := 0
-		NewRuleBase := decodeRuleBase(gene.Sequence)
+		NewRuleBase := DecodeRuleBase(gene.Sequence, conditionLength, ruleLength)
 		for _, InputRule := range InputRuleBase {
 			for _, GeneratedRule := range NewRuleBase {
 				matches, err := RulesMatch(InputRule, GeneratedRule)
@@ -192,7 +168,7 @@ func TestRuleGA(t *testing.T) {
 	})
 
 	geneticAlgorithm.SetMutateFunc(func(gene Genome, random *rand.Rand) Genome {
-		NewRuleBase := decodeRuleBase(gene.Sequence)
+		NewRuleBase := DecodeRuleBase(gene.Sequence, conditionLength, ruleLength)
 		gene = gene.Copy()
 		choice := random.Int() % len(NewRuleBase)
 		choice2 := random.Int() % len(NewRuleBase[choice].Condition)
@@ -204,7 +180,7 @@ func TestRuleGA(t *testing.T) {
 		}
 		choice3 := random.Int() % len(operators)
 		NewRuleBase[choice].Condition[choice2] = operators[choice3]
-		return Genome{encodeRuleBase(NewRuleBase)}
+		return Genome{EncodeRuleBase(NewRuleBase)}
 	})
 
 	geneticAlgorithm.Run(10, numRules*ruleLength, 10, true, true, false)
