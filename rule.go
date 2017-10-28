@@ -10,6 +10,8 @@ type Rule struct {
 	Output    string
 }
 
+type RulesMatchFunc func(Rule, Rule) (bool, error)
+
 var DefaultRulesMatchFunc RulesMatchFunc = func(rule1, rule2 Rule) (bool, error) {
 	if len(rule1.Condition) != len(rule2.Condition) {
 		return false, errors.New("conditions are not same length")
