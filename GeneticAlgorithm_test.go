@@ -80,8 +80,7 @@ func testCustomFunctions(geneticAlgorithm *GeneticAlgorithm, t *testing.T) {
 
 func TestGACustomFunctions(t *testing.T) {
 	t.Parallel()
-	success := true
-	success = success && t.Run("NilGenerateCandidate", func(t *testing.T) {
+	t.Run("NilGenerateCandidate", func(t *testing.T) {
 		t.Parallel()
 		var geneticAlgorithm GeneticAlgorithm
 		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
@@ -90,9 +89,12 @@ func TestGACustomFunctions(t *testing.T) {
 		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 		geneticAlgorithm.SetOutputFunc(PrintToConsole)
 		geneticAlgorithm.SetSeed(time.Now().Unix())
+		geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+		geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+		geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
 		testCustomFunctions(&geneticAlgorithm, t)
 	})
-	success = success && t.Run("NilCrossover", func(t *testing.T) {
+	t.Run("NilCrossover", func(t *testing.T) {
 		t.Parallel()
 		var geneticAlgorithm GeneticAlgorithm
 		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
@@ -101,9 +103,12 @@ func TestGACustomFunctions(t *testing.T) {
 		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 		geneticAlgorithm.SetOutputFunc(PrintToConsole)
 		geneticAlgorithm.SetSeed(time.Now().Unix())
+		geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+		geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+		geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
 		testCustomFunctions(&geneticAlgorithm, t)
 	})
-	success = success && t.Run("NilMutate", func(t *testing.T) {
+	t.Run("NilMutate", func(t *testing.T) {
 		t.Parallel()
 		var geneticAlgorithm GeneticAlgorithm
 		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
@@ -112,9 +117,12 @@ func TestGACustomFunctions(t *testing.T) {
 		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 		geneticAlgorithm.SetOutputFunc(PrintToConsole)
 		geneticAlgorithm.SetSeed(time.Now().Unix())
+		geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+		geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+		geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
 		testCustomFunctions(&geneticAlgorithm, t)
 	})
-	success = success && t.Run("NilFitness", func(t *testing.T) {
+	t.Run("NilFitness", func(t *testing.T) {
 		t.Parallel()
 		var geneticAlgorithm GeneticAlgorithm
 		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
@@ -123,9 +131,12 @@ func TestGACustomFunctions(t *testing.T) {
 		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 		geneticAlgorithm.SetOutputFunc(PrintToConsole)
 		geneticAlgorithm.SetSeed(time.Now().Unix())
+		geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+		geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+		geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
 		testCustomFunctions(&geneticAlgorithm, t)
 	})
-	success = success && t.Run("NilSelection", func(t *testing.T) {
+	t.Run("NilSelection", func(t *testing.T) {
 		t.Parallel()
 		var geneticAlgorithm GeneticAlgorithm
 		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
@@ -134,9 +145,12 @@ func TestGACustomFunctions(t *testing.T) {
 		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
 		geneticAlgorithm.SetOutputFunc(PrintToConsole)
 		geneticAlgorithm.SetSeed(time.Now().Unix())
+		geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+		geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+		geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
 		testCustomFunctions(&geneticAlgorithm, t)
 	})
-	success = success && t.Run("NilOutput", func(t *testing.T) {
+	t.Run("NilOutput", func(t *testing.T) {
 		t.Parallel()
 		var geneticAlgorithm GeneticAlgorithm
 		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
@@ -145,9 +159,12 @@ func TestGACustomFunctions(t *testing.T) {
 		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
 		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 		geneticAlgorithm.SetSeed(time.Now().Unix())
+		geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+		geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+		geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
 		testCustomFunctions(&geneticAlgorithm, t)
 	})
-	success = success && t.Run("NilRandom", func(t *testing.T) {
+	t.Run("NilRandom", func(t *testing.T) {
 		t.Parallel()
 		var geneticAlgorithm GeneticAlgorithm
 		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
@@ -156,9 +173,57 @@ func TestGACustomFunctions(t *testing.T) {
 		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
 		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+		geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+		geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
 		testCustomFunctions(&geneticAlgorithm, t)
 	})
-	success = success && t.Run("AllFuncs", func(t *testing.T) {
+
+	t.Run("NilRulesMatch", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+		geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		geneticAlgorithm.SetSeed(3)
+		geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+		geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+
+	t.Run("NilEncodeRules", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+		geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		geneticAlgorithm.SetSeed(3)
+		geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+		geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+
+	t.Run("NilDecodeRules", func(t *testing.T) {
+		t.Parallel()
+		var geneticAlgorithm GeneticAlgorithm
+		geneticAlgorithm.SetGenerateCandidate(DefaultGenerateCandidate)
+		geneticAlgorithm.SetCrossoverFunc(DefaultCrossoverFunc)
+		geneticAlgorithm.SetMutateFunc(DefaultMutateFunc)
+		geneticAlgorithm.SetFitnessFunc(DefaultFitnessFunc)
+		geneticAlgorithm.SetSelectionFunc(TournamentSelection)
+		geneticAlgorithm.SetOutputFunc(PrintToConsole)
+		geneticAlgorithm.SetSeed(3)
+		geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+		geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+		testCustomFunctions(&geneticAlgorithm, t)
+	})
+	t.Run("AllFuncs", func(t *testing.T) {
 		t.Parallel()
 		var geneticAlgorithm = NewGeneticAlgorithm()
 		geneticAlgorithm.SetOutputFunc(func(a ...interface{}) { t.Log(a) })
@@ -169,11 +234,6 @@ func TestGACustomFunctions(t *testing.T) {
 			t.Log("GA returned nil error as expected. Got:", err)
 		}
 	})
-	if success {
-		t.Log("Test GA Custom Functions Succeeded")
-	} else {
-		t.Error("Test GA Custom Functions Failed")
-	}
 }
 
 func testGA(length, generations, expectedFitness, selectionMethod int, terminateEarly bool, t *testing.T) {

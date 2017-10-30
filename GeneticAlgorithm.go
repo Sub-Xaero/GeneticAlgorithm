@@ -28,6 +28,10 @@ type GeneticAlgorithm struct {
 	Selection         SelectFunction
 	Output            func(a ...interface{})
 
+	RulesMatch  RulesMatchFunc
+	EncodeRules EncodeRulesFunc
+	DecodeRules DecodeRulesFunc
+
 	RandomEngine *rand.Rand
 }
 
@@ -40,6 +44,10 @@ func NewGeneticAlgorithm() GeneticAlgorithm {
 	geneticAlgorithm.SetSelectionFunc(TournamentSelection)
 	geneticAlgorithm.SetOutputFunc(PrintToConsole)
 	geneticAlgorithm.SetSeed(time.Now().Unix())
+
+	geneticAlgorithm.SetRulesMatchFunc(DefaultRulesMatchFunc)
+	geneticAlgorithm.SetEncodeRulesFunc(DefaultEncodeRulesFunc)
+	geneticAlgorithm.SetDecodeRulesFunc(DefaultDecodeRulesFunc)
 	return geneticAlgorithm
 }
 
@@ -106,6 +114,15 @@ func (genA *GeneticAlgorithm) Run(populationSize, bitstringLength, generations i
 	}
 	if genA.RandomEngine == nil {
 		return errors.New("random generator is not initialised")
+	}
+	if genA.RulesMatch == nil {
+		return errors.New("rulesMatch func is nil")
+	}
+	if genA.EncodeRules == nil {
+		return errors.New("encodeRules func is nil")
+	}
+	if genA.DecodeRules == nil {
+		return errors.New("decodeRules func is nil")
 	}
 
 	// Init

@@ -2,12 +2,45 @@ package ga
 
 import (
 	"bufio"
+	"fmt"
 	"math/rand"
 	"os"
 	"testing"
 )
 
 var InputRuleBase []Rule
+
+func TestSetRulesMatchFunc(t *testing.T) {
+	t.Parallel()
+	var genA = NewGeneticAlgorithm()
+	genA.SetSeed(3)
+	genA.SetOutputFunc(func(a ...interface{}) { t.Log(a...) })
+
+	genA.SetMutateFunc(func(gene Genome, random *rand.Rand) Genome {
+		return Genome{Bitstring{"1", "2", "3", "4"}}
+	})
+
+	output := fmt.Sprint(genA.Mutate(Genome{}, genA.RandomEngine))
+	expectedOutput := "{[1 2 3 4 ]}"
+	if output != expectedOutput {
+		t.Error("Mutate function not set. Expected:", expectedOutput, "Got:", output)
+	} else {
+		t.Log("Mutate function was set successfully. Expected:", expectedOutput, "Got:", output)
+	}
+}
+
+func TestDefaultRulesMatchFunc(t *testing.T) {
+	t.Parallel()
+	genA := NewGeneticAlgorithm()
+	gene := Genome{Bitstring{"1", "0", "1", "0", "1"}}
+	geneOutput := genA.Mutate(gene, genA.RandomEngine)
+
+	if gene.String() == geneOutput.String() {
+		t.Error("Mutate did not change bitstrings. At least one mutation should occur. Was:", gene, "Mutated:", geneOutput)
+	} else {
+		t.Log("Mutate successfully changed bitstrings. At least one mutation should occur. Was:", gene, "Mutated:", geneOutput)
+	}
+}
 
 func TestRule_String(t *testing.T) {
 	t.Parallel()
@@ -22,8 +55,9 @@ func TestRule_String(t *testing.T) {
 	}
 }
 
-func TestRule_Matches(t *testing.T) {
+func TestRule_DefaultRulesMatch(t *testing.T) {
 	t.Parallel()
+	genA := NewGeneticAlgorithm()
 	checkResult := func(rule1, rule2 Rule, expectedResult, result bool) {
 		if expectedResult != result {
 			t.Error("Rules match, expected not to match.", rule1, "!=", rule2, "=", result)
@@ -36,7 +70,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0", "0"}, "0"}
 		rule2 := Rule{Bitstring{"1", "0"}, "1"}
-		got, err := RulesMatch(rule1, rule2)
+		got, err := genA.RulesMatch(rule1, rule2)
 		if err == nil {
 			t.Error("Expected error, strings are not same length. No error thrown.")
 		} else {
@@ -48,7 +82,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0"}, "0"}
 		rule2 := Rule{Bitstring{"1", "0"}, "1"}
-		got, err := RulesMatch(rule1, rule2)
+		got, err := genA.RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -60,7 +94,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0"}, "1"}
 		rule2 := Rule{Bitstring{"#", "1"}, "1"}
-		got, err := RulesMatch(rule1, rule2)
+		got, err := genA.RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -72,7 +106,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "1", "0"}, "1"}
 		rule2 := Rule{Bitstring{"#", "#", "1"}, "1"}
-		got, err := RulesMatch(rule1, rule2)
+		got, err := genA.RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -84,7 +118,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0"}, "1"}
 		rule2 := Rule{Bitstring{"1", "0"}, "1"}
-		got, err := RulesMatch(rule1, rule2)
+		got, err := genA.RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -96,7 +130,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"1", "0", "#"}, "1"}
 		rule2 := Rule{Bitstring{"1", "0", "1"}, "1"}
-		got, err := RulesMatch(rule1, rule2)
+		got, err := genA.RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -108,7 +142,7 @@ func TestRule_Matches(t *testing.T) {
 		t.Parallel()
 		rule1 := Rule{Bitstring{"#", "0", "#"}, "1"}
 		rule2 := Rule{Bitstring{"1", "0", "1"}, "1"}
-		got, err := RulesMatch(rule1, rule2)
+		got, err := genA.RulesMatch(rule1, rule2)
 		if err != nil {
 			t.Error("Did not expect error, error thrown.", err)
 		} else {
@@ -153,10 +187,11 @@ func TestRuleGA(t *testing.T) {
 
 	geneticAlgorithm.SetFitnessFunc(func(gene Genome) int {
 		fitnessValue := 0
-		NewRuleBase := DecodeRuleBase(gene.Sequence, conditionLength, ruleLength)
+		NewRuleBase, err := geneticAlgorithm.DecodeRules(gene.Sequence, conditionLength, ruleLength)
+		check(err)
 		for _, InputRule := range InputRuleBase {
 			for _, GeneratedRule := range NewRuleBase {
-				matches, err := RulesMatch(InputRule, GeneratedRule)
+				matches, err := geneticAlgorithm.RulesMatch(InputRule, GeneratedRule)
 				check(err)
 				if matches {
 					fitnessValue++
@@ -168,7 +203,8 @@ func TestRuleGA(t *testing.T) {
 	})
 
 	geneticAlgorithm.SetMutateFunc(func(gene Genome, random *rand.Rand) Genome {
-		NewRuleBase := DecodeRuleBase(gene.Sequence, conditionLength, ruleLength)
+		NewRuleBase, err := geneticAlgorithm.DecodeRules(gene.Sequence, conditionLength, ruleLength)
+		check(err)
 		gene = gene.Copy()
 		for rule := range NewRuleBase {
 			chance := random.Int() % 100
@@ -184,13 +220,15 @@ func TestRuleGA(t *testing.T) {
 				NewRuleBase[rule].Condition[choice2] = operators[choice3]
 			}
 		}
-		return Genome{EncodeRuleBase(NewRuleBase)}
+		sequence, err := geneticAlgorithm.EncodeRules(NewRuleBase)
+		check(err)
+		return Genome{sequence}
 	})
 
 	geneticAlgorithm.Run(20, numRules*ruleLength, 20, true, true, false)
 	geneticAlgorithm.Output(geneticAlgorithm.BestCandidate, geneticAlgorithm.Candidates)
 
-	geneticAlgorithm.Output(DecodeRuleBase(geneticAlgorithm.BestCandidate.Sequence, conditionLength, ruleLength))
+	geneticAlgorithm.Output(geneticAlgorithm.DecodeRules(geneticAlgorithm.BestCandidate.Sequence, conditionLength, ruleLength))
 
 	expectedFitness := 26
 	gotFitness := geneticAlgorithm.Fitness(geneticAlgorithm.BestCandidate)

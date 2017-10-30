@@ -12,6 +12,17 @@ type Rule struct {
 
 type RuleBase []Rule
 type RulesMatchFunc func(Rule, Rule) (bool, error)
+type EncodeRulesFunc func(RuleBase) (Bitstring, error)
+type DecodeRulesFunc func(Bitstring, int, int) (RuleBase, error)
+
+func (r Rule) String() string {
+	return fmt.Sprintf("%v %v", r.Condition, r.Output)
+}
+
+// SetMutateFunc changes the mutate function to the function specified
+func (genA *GeneticAlgorithm) SetRulesMatchFunc(f RulesMatchFunc) {
+	genA.RulesMatch = f
+}
 
 var DefaultRulesMatchFunc RulesMatchFunc = func(rule1, rule2 Rule) (bool, error) {
 	if len(rule1.Condition) != len(rule2.Condition) {
@@ -30,18 +41,12 @@ var DefaultRulesMatchFunc RulesMatchFunc = func(rule1, rule2 Rule) (bool, error)
 	return outputMatches && conditionMatches, nil
 }
 
-var RulesMatch = DefaultRulesMatchFunc
-
 // SetMutateFunc changes the mutate function to the function specified
-func SetRulesMatchFunc(f RulesMatchFunc) {
-	RulesMatch = f
+func (genA *GeneticAlgorithm) SetDecodeRulesFunc(f DecodeRulesFunc) {
+	genA.DecodeRules = f
 }
 
-func (r Rule) String() string {
-	return fmt.Sprintf("%v %v", r.Condition, r.Output)
-}
-
-func DecodeRuleBase(sequence Bitstring, conditionLength, ruleLength int) RuleBase {
+var DefaultDecodeRulesFunc DecodeRulesFunc = func(sequence Bitstring, conditionLength, ruleLength int) (RuleBase, error) {
 	NewRuleBase := make([]Rule, 0)
 	for i := 0; i < len(sequence); i += ruleLength {
 		condition := make(Bitstring, len(sequence[i:i+conditionLength]))
@@ -49,10 +54,15 @@ func DecodeRuleBase(sequence Bitstring, conditionLength, ruleLength int) RuleBas
 		rule := Rule{condition, sequence[i+conditionLength]}
 		NewRuleBase = append(NewRuleBase, rule)
 	}
-	return NewRuleBase
+	return NewRuleBase, nil
 }
 
-func EncodeRuleBase(paramRuleBase RuleBase) Bitstring {
+// SetMutateFunc changes the mutate function to the function specified
+func (genA *GeneticAlgorithm) SetEncodeRulesFunc(f EncodeRulesFunc) {
+	genA.EncodeRules = f
+}
+
+var DefaultEncodeRulesFunc = func(paramRuleBase RuleBase) (Bitstring, error) {
 	var sequence Bitstring
 	for _, rule := range paramRuleBase {
 		for _, condition := range rule.Condition {
@@ -62,5 +72,5 @@ func EncodeRuleBase(paramRuleBase RuleBase) Bitstring {
 			sequence = append(sequence, string(output))
 		}
 	}
-	return sequence
+	return sequence, nil
 }
